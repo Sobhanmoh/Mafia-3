@@ -1,0 +1,3245 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="icon" type="image/png"
+    href="https://plain-apac-prod-public.komododecks.com/202606/23/mm1va9RGaMzIAVblRC0r/image.png">
+  <title>Mafia 3</title>
+
+  <!-- پخش خودکار موزیک پس‌زمینه — برای تغییر آهنگ: مقدار src را عوض کنید -->
+  <audio id="bgMusic" loop preload="auto" style="display:none">
+    <!--
+    ══════════════════════════════════════════════════
+    برای اضافه کردن موزیک:
+    گزینه ۱ — لینک مستقیم MP3:
+      <source src="https://example.com/music.mp3" type="audio/mpeg">
+    گزینه ۲ — فایل محلی:
+      <source src="music.mp3" type="audio/mpeg">
+    ══════════════════════════════════════════════════
+  -->
+    <!-- https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3 -->
+    <source
+      src="https://jetta.vgmtreasurechest.com/soundtracks/the-godfather-the-game-original-soundtrack/rckuptxh/02%20Extortion.mp3"
+      type="audio/mpeg">
+  </audio>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+
+    /* ══════════ THEME TOKENS ══════════ */
+    [data-theme="dark"] {
+      --bg: #0c0c0f;
+      --bg2: #111116;
+      --bg3: #18181f;
+      --bg4: #1f1f28;
+      --line: rgba(255, 255, 255, .07);
+      --line2: rgba(255, 255, 255, .13);
+      --txt: #f4f4f5;
+      --txt2: #8e8ea0;
+      --txt3: #505060;
+      --card-bg: #111116;
+      --sheet-bg: #18181f;
+    }
+
+    [data-theme="light"] {
+      --bg: #f2f2f7;
+      --bg2: #ffffff;
+      --bg3: #f8f8fc;
+      --bg4: #ebebf0;
+      --line: rgba(0, 0, 0, .08);
+      --line2: rgba(0, 0, 0, .15);
+      --txt: #111116;
+      --txt2: #505060;
+      --txt3: #9090a0;
+      --card-bg: #ffffff;
+      --sheet-bg: #f2f2f7;
+    }
+
+    :root {
+      --red: #e63950;
+      --red-glow: rgba(230, 57, 80, .28);
+      --gold: #c9a84c;
+      --gold2: rgba(201, 168, 76, .15);
+      --gold-glow: rgba(201, 168, 76, .3);
+      --green: #34c776;
+      --green2: rgba(52, 199, 118, .15);
+      --orange: #f0932b;
+      --orange2: rgba(240, 147, 43, .15);
+      --purple: #9b59b6;
+      --purple2: rgba(155, 89, 182, .15);
+      --blue: #3498db;
+      --blue2: rgba(52, 152, 219, .15);
+      --r: 14px;
+      --r2: 10px;
+      --tr: all .2s ease;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: var(--bg);
+      color: var(--txt);
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      transition: background .3s, color .3s;
+    }
+
+    ::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--bg4);
+      border-radius: 2px;
+    }
+
+    /* ══ SCREENS ══ */
+    .screen {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 18px 110px;
+      flex: 1;
+    }
+
+    /* ══ LOGO ══ */
+    .logo-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 0 22px;
+      text-align: center;
+      position: relative;
+    }
+
+    .site-logo {
+      width: 78px;
+      height: 78px;
+      border-radius: 22px;
+      background: linear-gradient(145deg, #1e0a14, #2d0d1e);
+      border: 1.5px solid rgba(230, 57, 80, .4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin-bottom: 14px;
+      box-shadow: 0 0 40px rgba(230, 57, 80, .2), 0 8px 32px rgba(0, 0, 0, .5);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      /* ─── برای جایگزینی عکس PNG: مقدار font-size را 0 کنید و یک <img> داخل آن بگذارید ─── */
+    }
+
+    .site-logo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 40% 30%, rgba(230, 57, 80, .15), transparent 70%);
+    }
+
+    /*
+  ── راهنمای تغییر لوگو ──
+  گزینه ۱ ایموجی: تگ <span id="logoEmoji"> را ویرایش کنید
+  گزینه ۲ PNG:
+    <img id="logoImg" src="logo.png" style="width:60px;height:60px;object-fit:contain;border-radius:12px;position:relative;z-index:1;">
+*/
+    .logo-title {
+      font-size: 1.9rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, var(--txt) 0%, var(--txt2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+
+    .logo-sub {
+      font-size: .8rem;
+      color: var(--txt3);
+    }
+
+    /* ══ TOP BAR on home ══ */
+    .home-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px 0;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ══ INPUT ══ */
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .field {
+      flex: 1;
+      background: var(--bg3);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r2);
+      padding: 12px 14px;
+      color: var(--txt);
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: .92rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .field:focus {
+      border-color: rgba(230, 57, 80, .5);
+    }
+
+    .field::placeholder {
+      color: var(--txt3);
+    }
+
+    /* ══ PLAYER CHIPS ══ */
+    .players-area {
+      background: var(--bg2);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r);
+      padding: 12px;
+      min-height: 68px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-content: flex-start;
+    }
+
+    .p-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--bg4);
+      border: 1px solid var(--line2);
+      border-radius: 30px;
+      padding: 5px 11px;
+      font-size: .78rem;
+      font-weight: 600;
+    }
+
+    .p-chip .chip-del {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: .6rem;
+      color: var(--txt3);
+      transition: var(--tr);
+    }
+
+    .p-chip .chip-del:hover {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .p-empty {
+      width: 100%;
+      text-align: center;
+      color: var(--txt3);
+      font-size: .8rem;
+      padding: 10px 0;
+    }
+
+    .p-count {
+      font-size: .73rem;
+      color: var(--txt3);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    /* ══ MY LIST ══ */
+    .mylist-section {
+      background: var(--bg2);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .mylist-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 14px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .mylist-header-label {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--txt2);
+    }
+
+    .mylist-arrow {
+      font-size: .7rem;
+      color: var(--txt3);
+      transition: transform .2s;
+    }
+
+    .mylist-arrow.open {
+      transform: rotate(180deg);
+    }
+
+    .mylist-body {
+      display: none;
+      border-top: 1px solid var(--line);
+    }
+
+    .mylist-body.open {
+      display: block;
+    }
+
+    .mylist-add-row {
+      display: flex;
+      gap: 8px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .saved-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      transition: background .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .saved-row:last-child {
+      border-bottom: none;
+    }
+
+    .saved-row:hover {
+      background: var(--bg3);
+    }
+
+    .saved-row.sel {
+      background: rgba(230, 57, 80, .07);
+    }
+
+    .s-check {
+      width: 19px;
+      height: 19px;
+      border-radius: 5px;
+      border: 1.5px solid var(--line2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .65rem;
+      color: transparent;
+      flex-shrink: 0;
+      transition: var(--tr);
+    }
+
+    .saved-row.sel .s-check {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    .saved-row-name {
+      flex: 1;
+      font-size: .84rem;
+      font-weight: 500;
+    }
+
+    .saved-del {
+      font-size: .68rem;
+      padding: 3px 7px;
+      background: transparent;
+      border: 1px solid rgba(230, 57, 80, .2);
+      color: var(--red);
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Vazirmatn', sans-serif;
+      transition: var(--tr);
+    }
+
+    .saved-del:hover {
+      background: rgba(230, 57, 80, .12);
+    }
+
+    .mylist-actions {
+      display: flex;
+      gap: 6px;
+      padding: 9px 11px;
+      border-top: 1px solid var(--line);
+    }
+
+    /* ══ BUTTONS ══ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 18px;
+      border-radius: var(--r2);
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: .87rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: var(--tr);
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0);
+      transition: background .12s;
+    }
+
+    .btn:active::after {
+      background: rgba(255, 255, 255, .07);
+    }
+
+    .btn-red {
+      background: var(--red);
+      color: #fff;
+      box-shadow: 0 4px 18px var(--red-glow);
+    }
+
+    .btn-red:hover {
+      box-shadow: 0 6px 26px var(--red-glow);
+    }
+
+    .btn-outline {
+      background: var(--bg3);
+      color: var(--txt2);
+      border: 1.5px solid var(--line2);
+    }
+
+    .btn-outline:hover {
+      color: var(--txt);
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), #a07828);
+      color: #000;
+      box-shadow: 0 4px 18px var(--gold-glow);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--txt3);
+      border: 1px solid var(--line);
+    }
+
+    .btn-ghost:hover {
+      color: var(--txt2);
+      border-color: var(--line2);
+    }
+
+    .btn-full {
+      width: 100%;
+    }
+
+    .btn-sm {
+      padding: 7px 12px;
+      font-size: .77rem;
+      border-radius: 8px;
+    }
+
+    .btn-xs {
+      padding: 4px 9px;
+      font-size: .7rem;
+      border-radius: 6px;
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border-radius: 9px;
+      font-size: 1rem;
+    }
+
+    .btn:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+    }
+
+    /* ══ SCREEN HEADER ══ */
+    .screen-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 20;
+    }
+
+    .screen-header-back {
+      width: 34px;
+      height: 34px;
+      background: var(--bg3);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: .9rem;
+      color: var(--txt2);
+      transition: var(--tr);
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .screen-header-back:hover {
+      background: var(--bg4);
+      color: var(--txt);
+    }
+
+    .screen-header-title {
+      font-size: 1rem;
+      font-weight: 800;
+      flex: 1;
+    }
+
+    .screen-header-sub {
+      font-size: .7rem;
+      color: var(--txt3);
+    }
+
+    /* ══ CARD EDITOR ══ */
+    .card-editor-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .ce-item {
+      background: var(--bg2);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      transition: var(--tr);
+    }
+
+    .ce-item.active-role {
+      border-color: var(--line2);
+    }
+
+    .ce-emoji {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      width: 32px;
+      text-align: center;
+    }
+
+    /* ── برای جایگزینی PNG کنار هر نقش: مقدار img-src را در JS تنظیم کنید ── */
+    .ce-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 7px;
+      object-fit: cover;
+      flex-shrink: 0;
+      display: none;
+    }
+
+    .ce-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .ce-name {
+      font-size: .86rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .ce-desc {
+      font-size: .68rem;
+      color: var(--txt3);
+      line-height: 1.45;
+    }
+
+    .ce-counter {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .ce-count-val {
+      font-size: 1rem;
+      font-weight: 900;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .ce-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: var(--bg4);
+      border: 1px solid var(--line2);
+      color: var(--txt2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .88rem;
+      font-weight: 700;
+      transition: var(--tr);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .ce-btn:hover {
+      background: var(--red);
+      color: #fff;
+      border-color: var(--red);
+    }
+
+    .ce-btn.inc:hover {
+      background: var(--green);
+      color: #000;
+      border-color: var(--green);
+    }
+
+    .ce-btn.disabled-btn {
+      opacity: .22;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .ce-group-title {
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 13px 2px 7px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ce-group-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .ce-group-title.mafia-title {
+      color: var(--red);
+    }
+
+    .ce-group-title.citizen-title {
+      color: var(--green);
+    }
+
+    .ce-group-title.indie-title {
+      color: var(--orange);
+    }
+
+    .ce-total {
+      text-align: center;
+      font-size: .78rem;
+      color: var(--txt3);
+      padding: 12px 0 3px;
+    }
+
+    /* ══ GAME SCREEN ══ */
+    .player-list-reveal {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      padding: 16px 18px;
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 100px;
+    }
+
+    .pli {
+      background: var(--bg2);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r);
+      overflow: hidden;
+      transition: var(--tr);
+    }
+
+    .pli-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 13px;
+    }
+
+    .pli-num {
+      width: 27px;
+      height: 27px;
+      border-radius: 50%;
+      background: var(--bg4);
+      border: 1px solid var(--line2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--txt3);
+      flex-shrink: 0;
+    }
+
+    .pli-name {
+      flex: 1;
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    .pli-status {
+      font-size: .68rem;
+      color: var(--txt3);
+      flex-shrink: 0;
+    }
+
+    .pli.done .pli-num {
+      background: rgba(52, 199, 118, .15);
+      border-color: rgba(52, 199, 118, .3);
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .pli.done .pli-status {
+      color: var(--green);
+    }
+
+    .pli.done .pli-status {
+      color: var(--green);
+    }
+
+    .pli.eliminated {
+      opacity: .42;
+    }
+
+    .pli.eliminated .pli-name {
+      text-decoration: line-through;
+      color: var(--txt3);
+    }
+
+    .pli-reveal-btn {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 13px;
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: .76rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: var(--tr);
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 2px 9px var(--red-glow);
+    }
+
+    .pli-reveal-btn:disabled {
+      opacity: .3;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .pli-actions {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      padding: 9px 13px;
+      border-top: 1px solid var(--line);
+      background: var(--bg);
+    }
+
+    .act-btn {
+      padding: 4px 9px;
+      border-radius: 6px;
+      border: none;
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: .65rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--tr);
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .act-sniper {
+      background: var(--blue2);
+      color: var(--blue);
+      border: 1px solid rgba(52, 152, 219, .3);
+    }
+
+    .act-mafia {
+      background: rgba(230, 57, 80, .12);
+      color: var(--red);
+      border: 1px solid rgba(230, 57, 80, .28);
+    }
+
+    .act-doctor {
+      background: var(--green2);
+      color: var(--green);
+      border: 1px solid rgba(52, 199, 118, .3);
+    }
+
+    .act-detect {
+      background: var(--purple2);
+      color: var(--purple);
+      border: 1px solid rgba(155, 89, 182, .3);
+    }
+
+    .act-elim {
+      background: rgba(230, 57, 80, .08);
+      color: var(--red);
+      border: 1px solid rgba(230, 57, 80, .2);
+    }
+
+    .act-revive {
+      background: var(--gold2);
+      color: var(--gold);
+      border: 1px solid rgba(201, 168, 76, .3);
+    }
+
+    .act-btn:active {
+      opacity: .7;
+    }
+
+    /* ══ STOPWATCH ══ */
+    .stopwatch-bar {
+      background: var(--bg2);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r);
+      padding: 9px 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 0;
+    }
+
+    .sw-display {
+      font-size: 1.45rem;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      color: var(--gold);
+      letter-spacing: 2px;
+      font-family: monospace;
+      flex: 1;
+    }
+
+    .sw-btns {
+      display: flex;
+      gap: 7px;
+    }
+
+    /* ══ SCORE ══ */
+    .score-row {
+      display: flex;
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+
+    .score-cell {
+      flex: 1;
+      background: var(--bg2);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r2);
+      padding: 9px 7px;
+      text-align: center;
+    }
+
+    .score-label {
+      font-size: .62rem;
+      color: var(--txt3);
+      margin-bottom: 3px;
+    }
+
+    .score-val {
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    .sc-cit .score-val {
+      color: var(--green);
+    }
+
+    .sc-rnd .score-val {
+      color: var(--gold);
+    }
+
+    .sc-maf .score-val {
+      color: var(--red);
+    }
+
+    /* ══ ROLE CARD OVERLAY ══ */
+    #roleOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(5, 5, 8, .97);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    #roleOverlay.vis {
+      display: flex;
+    }
+
+    .role-card {
+      width: min(295px, 86vw);
+      background: var(--bg2);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, .8);
+      animation: cardIn .42s cubic-bezier(.22, .68, 0, 1.2) forwards;
+      position: relative;
+      border: 1.5px solid var(--line2);
+    }
+
+    @keyframes cardIn {
+      from {
+        transform: scale(.82) translateY(28px);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .role-card-top {
+      padding: 26px 22px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .role-card-top::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--rc-bg, rgba(230, 57, 80, .08));
+      pointer-events: none;
+    }
+
+    .rc-player {
+      font-size: .7rem;
+      letter-spacing: 1.5px;
+      color: var(--txt3);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .rc-emoji {
+      font-size: 3.2rem;
+      margin-bottom: 9px;
+      position: relative;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .4));
+    }
+
+    .rc-name {
+      font-size: 1.45rem;
+      font-weight: 900;
+      margin-bottom: 4px;
+      position: relative;
+    }
+
+    .rc-team {
+      font-size: .7rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 20px;
+      position: relative;
+      display: inline-block;
+      margin-bottom: 0;
+    }
+
+    .role-card-desc {
+      padding: 12px 16px 14px;
+      border-top: 1px solid var(--line);
+      font-size: .75rem;
+      color: var(--txt2);
+      line-height: 1.65;
+      text-align: center;
+    }
+
+    .role-countdown {
+      font-size: .68rem;
+      color: var(--txt3);
+      text-align: center;
+      margin: 6px 0 4px;
+    }
+
+    .role-timer-wrap {
+      height: 3px;
+      background: rgba(255, 255, 255, .06);
+      margin: 0 16px 14px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .role-timer-bar {
+      height: 100%;
+      width: 100%;
+      border-radius: 2px;
+      transition: width .1s linear;
+    }
+
+    .ro-hint {
+      margin-top: 20px;
+      font-size: .7rem;
+      color: var(--txt3);
+      animation: blink 1.4s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: .3;
+      }
+
+      50% {
+        opacity: .8;
+      }
+    }
+
+    /* ══ PER-ROLE CARD COLORS ══ */
+    /* هر نقش یک رنگ پس‌زمینه کارت دارد — قابل تغییر */
+    .rc-citizen {
+      --rc-bg: rgba(52, 199, 118, .07);
+    }
+
+    .rc-doctor {
+      --rc-bg: rgba(52, 199, 118, .12);
+    }
+
+    .rc-detective {
+      --rc-bg: rgba(52, 152, 219, .09);
+    }
+
+    .rc-sniper {
+      --rc-bg: rgba(52, 152, 219, .12);
+    }
+
+    .rc-psycho {
+      --rc-bg: rgba(155, 89, 182, .10);
+    }
+
+    .rc-guard {
+      --rc-bg: rgba(52, 199, 118, .08);
+    }
+
+    .rc-hardman {
+      --rc-bg: rgba(240, 147, 43, .08);
+    }
+
+    .rc-interrogator {
+      --rc-bg: rgba(52, 152, 219, .08);
+    }
+
+    .rc-boxer {
+      --rc-bg: rgba(240, 147, 43, .10);
+    }
+
+    .rc-mayor {
+      --rc-bg: rgba(201, 168, 76, .10);
+    }
+
+    .rc-spy {
+      --rc-bg: rgba(52, 152, 219, .10);
+    }
+
+    .rc-blacksmith {
+      --rc-bg: rgba(201, 168, 76, .08);
+    }
+
+    .rc-angel {
+      --rc-bg: rgba(255, 255, 255, .05);
+    }
+
+    .rc-drjamshid {
+      --rc-bg: rgba(52, 199, 118, .12);
+    }
+
+    .rc-coinkeen {
+      --rc-bg: rgba(240, 147, 43, .09);
+    }
+
+    .rc-bellman {
+      --rc-bg: rgba(52, 152, 219, .07);
+    }
+
+    .rc-judge {
+      --rc-bg: rgba(155, 89, 182, .08);
+    }
+
+    .rc-archivist {
+      --rc-bg: rgba(201, 168, 76, .07);
+    }
+
+    .rc-twins {
+      --rc-bg: rgba(52, 199, 118, .09);
+    }
+
+    .rc-hunter {
+      --rc-bg: rgba(240, 147, 43, .12);
+    }
+
+    .rc-mirror {
+      --rc-bg: rgba(155, 89, 182, .09);
+    }
+
+    .rc-informer {
+      --rc-bg: rgba(52, 152, 219, .08);
+    }
+
+    .rc-mafia {
+      --rc-bg: rgba(230, 57, 80, .09);
+    }
+
+    .rc-godfather {
+      --rc-bg: rgba(230, 57, 80, .13);
+    }
+
+    .rc-lector {
+      --rc-bg: rgba(230, 57, 80, .10);
+    }
+
+    .rc-nato {
+      --rc-bg: rgba(230, 57, 80, .12);
+    }
+
+    .rc-hostage {
+      --rc-bg: rgba(230, 57, 80, .08);
+    }
+
+    .rc-mafiaspy {
+      --rc-bg: rgba(155, 89, 182, .10);
+    }
+
+    .rc-serialkiller {
+      --rc-bg: rgba(80, 0, 0, .18);
+    }
+
+    .rc-wizard {
+      --rc-bg: rgba(155, 89, 182, .14);
+    }
+
+    .rc-double {
+      --rc-bg: rgba(230, 57, 80, .09);
+    }
+
+    .rc-infiltrator {
+      --rc-bg: rgba(230, 57, 80, .08);
+    }
+
+    .rc-poisoner {
+      --rc-bg: rgba(60, 180, 0, .08);
+    }
+
+    .rc-mterrorist {
+      --rc-bg: rgba(230, 57, 80, .12);
+    }
+
+    .rc-lawyer {
+      --rc-bg: rgba(155, 89, 182, .11);
+    }
+
+    .rc-negotiator {
+      --rc-bg: rgba(201, 168, 76, .11);
+    }
+
+    .rc-joker {
+      --rc-bg: rgba(240, 147, 43, .12);
+    }
+
+    .rc-terrorist {
+      --rc-bg: rgba(230, 57, 80, .10);
+    }
+
+    .rc-zodiac {
+      --rc-bg: rgba(52, 152, 219, .12);
+    }
+
+    .rc-sherlock {
+      --rc-bg: rgba(52, 152, 219, .14);
+    }
+
+    .rc-double2 {
+      --rc-bg: rgba(155, 89, 182, .10);
+    }
+
+    .rc-traitor {
+      --rc-bg: rgba(240, 147, 43, .12);
+    }
+
+    .rc-zombie {
+      --rc-bg: rgba(60, 180, 0, .12);
+    }
+
+    .rc-cursed {
+      --rc-bg: rgba(155, 89, 182, .12);
+    }
+
+    .rc-fox {
+      --rc-bg: rgba(240, 147, 43, .10);
+    }
+
+    .rc-executioner {
+      --rc-bg: rgba(80, 0, 0, .14);
+    }
+
+    /* ══ GOD OVERLAY ══ */
+    #godOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 250;
+      background: rgba(5, 5, 8, .98);
+      display: none;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 18px;
+    }
+
+    #godOverlay.vis {
+      display: block;
+    }
+
+    .god-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-top: 4px;
+    }
+
+    .god-title {
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    .god-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .god-cell {
+      background: var(--bg2);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r2);
+      padding: 11px;
+      text-align: center;
+    }
+
+    .god-cell-emoji {
+      font-size: 1.4rem;
+      margin-bottom: 3px;
+    }
+
+    .god-cell-player {
+      font-size: .65rem;
+      color: var(--txt3);
+      margin-bottom: 2px;
+    }
+
+    .god-cell-role {
+      font-size: .82rem;
+      font-weight: 800;
+    }
+
+    .god-cell-team {
+      font-size: .6rem;
+      margin-top: 2px;
+    }
+
+    /* ══ POPUPS ══ */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0, 0, 0, .83);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+    }
+
+    .popup-overlay.vis {
+      display: flex;
+    }
+
+    .popup-box {
+      width: min(330px, 90vw);
+      background: var(--bg2);
+      border: 1.5px solid var(--line2);
+      border-radius: 18px;
+      padding: 26px 20px;
+      text-align: center;
+      animation: cardIn .38s cubic-bezier(.22, .68, 0, 1.2) forwards;
+    }
+
+    .popup-icon {
+      font-size: 2.6rem;
+      margin-bottom: 10px;
+    }
+
+    .popup-title {
+      font-size: 1.15rem;
+      font-weight: 900;
+      margin-bottom: 7px;
+    }
+
+    .popup-sub {
+      font-size: .8rem;
+      color: var(--txt2);
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .popup-btns {
+      display: flex;
+      gap: 9px;
+    }
+
+    /* ══ CONFIRM ══ */
+    #confirmModal {
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      background: rgba(0, 0, 0, .82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+    }
+
+    #confirmModal.vis {
+      display: flex;
+    }
+
+    .confirm-box {
+      width: min(290px, 86vw);
+      background: var(--bg2);
+      border: 1.5px solid var(--line2);
+      border-radius: 16px;
+      padding: 22px 18px;
+      text-align: center;
+      animation: cardIn .32s cubic-bezier(.22, .68, 0, 1.2) forwards;
+    }
+
+    .confirm-title {
+      font-size: .98rem;
+      font-weight: 800;
+      margin-bottom: 7px;
+    }
+
+    .confirm-sub {
+      font-size: .78rem;
+      color: var(--txt2);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .confirm-btns {
+      display: flex;
+      gap: 9px;
+    }
+
+    /* ══ SETTINGS ══ */
+    .settings-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 18px 100px;
+    }
+
+    .stg-section {
+      margin-bottom: 20px;
+    }
+
+    .stg-section-title {
+      font-size: .68rem;
+      font-weight: 700;
+      color: var(--txt3);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 14px 0 9px;
+    }
+
+    .stg-row {
+      background: var(--bg2);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r2);
+      padding: 12px 13px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 7px;
+      gap: 11px;
+    }
+
+    .stg-info {
+      flex: 1;
+    }
+
+    .stg-label {
+      font-size: .83rem;
+      font-weight: 600;
+    }
+
+    .stg-sub {
+      font-size: .68rem;
+      color: var(--txt3);
+      margin-top: 2px;
+    }
+
+    .sw-toggle {
+      width: 40px;
+      height: 22px;
+      background: var(--bg4);
+      border-radius: 11px;
+      border: 1px solid var(--line2);
+      cursor: pointer;
+      position: relative;
+      transition: var(--tr);
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .sw-toggle::after {
+      content: '';
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--txt3);
+      position: absolute;
+      top: 2px;
+      right: 3px;
+      transition: var(--tr);
+    }
+
+    .sw-toggle.on {
+      background: var(--red);
+      border-color: var(--red);
+    }
+
+    .sw-toggle.on::after {
+      right: calc(100% - 19px);
+      background: #fff;
+    }
+
+    .num-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .n-btn {
+      width: 27px;
+      height: 27px;
+      border-radius: 7px;
+      background: var(--bg4);
+      border: 1px solid var(--line2);
+      color: var(--txt2);
+      font-size: .88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--tr);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .n-btn:hover {
+      background: var(--red);
+      color: #fff;
+      border-color: var(--red);
+    }
+
+    .n-val {
+      font-size: .93rem;
+      font-weight: 700;
+      min-width: 24px;
+      text-align: center;
+      color: var(--gold);
+    }
+
+    .sc-card {
+      background: var(--bg2);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r2);
+      padding: 12px;
+      margin-bottom: 7px;
+      cursor: pointer;
+      transition: var(--tr);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .sc-card:hover {
+      border-color: var(--line2);
+    }
+
+    .sc-card.sel {
+      border-color: var(--gold);
+      background: var(--gold2);
+    }
+
+    .sc-name {
+      font-size: .83rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .sc-desc {
+      font-size: .7rem;
+      color: var(--txt3);
+      line-height: 1.5;
+    }
+
+    .sc-tags {
+      display: flex;
+      gap: 5px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .sc-tag {
+      font-size: .6rem;
+      padding: 2px 7px;
+      border-radius: 9px;
+      background: var(--bg4);
+      border: 1px solid var(--line);
+      color: var(--txt3);
+    }
+
+    /* ══ HAMBURGER MENU ══ */
+    #menuOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(0, 0, 0, .6);
+      display: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #menuOverlay.vis {
+      display: block;
+    }
+
+    #menuDrawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: min(280px, 82vw);
+      background: var(--bg2);
+      z-index: 501;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform .3s cubic-bezier(.4, 0, .2, 1);
+      border-right: 1px solid var(--line2);
+    }
+
+    [data-theme="light"] #menuDrawer {
+      border-right: 1px solid var(--line2);
+    }
+
+    #menuDrawer.vis {
+      transform: translateX(0);
+    }
+
+    .menu-header {
+      padding: 24px 18px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .menu-logo-mini {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: linear-gradient(145deg, #1e0a14, #2d0d1e);
+      border: 1px solid rgba(230, 57, 80, .4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .menu-title {
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    .menu-sub {
+      font-size: .7rem;
+      color: var(--txt3);
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      cursor: pointer;
+      transition: background .15s;
+      border-bottom: 1px solid var(--line);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .menu-item:hover {
+      background: var(--bg3);
+    }
+
+    .menu-item-icon {
+      font-size: 1.1rem;
+      width: 28px;
+      text-align: center;
+    }
+
+    .menu-item-label {
+      font-size: .88rem;
+      font-weight: 600;
+    }
+
+    .menu-item-sub {
+      font-size: .7rem;
+      color: var(--txt3);
+      margin-top: 1px;
+    }
+
+    /* ══ ROLES CATALOG OVERLAY ══ */
+    #catalogOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 450;
+      background: rgba(5, 5, 8, .98);
+      display: none;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #catalogOverlay.vis {
+      display: block;
+    }
+
+    .catalog-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      background: var(--bg2);
+      z-index: 10;
+    }
+
+    .catalog-body {
+      padding: 14px 18px 32px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .catalog-group-title {
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 14px 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .catalog-group-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .catalog-group-title.ct-mafia {
+      color: var(--red);
+    }
+
+    .catalog-group-title.ct-citizen {
+      color: var(--green);
+    }
+
+    .catalog-group-title.ct-indie {
+      color: var(--orange);
+    }
+
+    .catalog-role-item {
+      background: var(--bg2);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r);
+      margin-bottom: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: var(--tr);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .catalog-role-item:hover {
+      border-color: var(--line2);
+    }
+
+    .catalog-role-item.open-item {
+      border-color: var(--line2);
+    }
+
+    .catalog-role-header {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 12px 14px;
+    }
+
+    .catalog-role-emoji {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .catalog-role-name {
+      flex: 1;
+      font-size: .88rem;
+      font-weight: 700;
+    }
+
+    .catalog-role-team {
+      font-size: .65rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      flex-shrink: 0;
+    }
+
+    .catalog-role-arrow {
+      font-size: .65rem;
+      color: var(--txt3);
+      flex-shrink: 0;
+      transition: transform .2s;
+    }
+
+    .catalog-role-item.open-item .catalog-role-arrow {
+      transform: rotate(180deg);
+    }
+
+    .catalog-role-desc {
+      display: none;
+      padding: 0 14px 13px 14px;
+      font-size: .75rem;
+      color: var(--txt2);
+      line-height: 1.65;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+    }
+
+    .catalog-role-item.open-item .catalog-role-desc {
+      display: block;
+    }
+
+    /* ══ BOTTOM FIXED ══ */
+    .bottom-fixed {
+      position: sticky;
+      bottom: 0;
+      background: linear-gradient(0deg, var(--bg) 80%, transparent);
+      padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 30;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ══ TOAST ══ */
+    #toast {
+      position: fixed;
+      bottom: 86px;
+      left: 50%;
+      transform: translateX(-50%) translateY(14px);
+      background: var(--bg4);
+      border: 1px solid var(--line2);
+      padding: 8px 16px;
+      border-radius: var(--r2);
+      font-size: .8rem;
+      font-weight: 600;
+      z-index: 600;
+      opacity: 0;
+      transition: all .25s;
+      white-space: nowrap;
+      pointer-events: none;
+      max-width: 88vw;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ══ LANGUAGE dir ══ */
+    [data-lang="en"] {
+      direction: ltr;
+      text-align: left;
+    }
+
+    [data-lang="en"] .logo-section,
+    [data-lang="en"] .p-empty,
+    [data-lang="en"] .p-count {
+      text-align: center;
+    }
+
+    .logo {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ════════════════════════════════════════
+     HAMBURGER MENU OVERLAY + DRAWER
+════════════════════════════════════════ -->
+  <div id="menuOverlay" onclick="closeMenu()"></div>
+  <div id="menuDrawer">
+    <div class="menu-header">
+      <div class="menu-logo-mini">
+        <img class="logo" src="https://plain-apac-prod-public.komododecks.com/202606/23/mm1va9RGaMzIAVblRC0r/image.png"
+          alt="">
+      </div>
+      <div>
+        <div class="menu-title" data-fa="مافیا" data-en="Mafia">مافیا</div>
+        <div class="menu-sub" data-fa="بدون کارت" data-en="No Cards">بدون کارت</div>
+      </div>
+    </div>
+    <div class="menu-item" onclick="closeMenu();goScreen('s-settings')">
+      <div class="menu-item-icon">⚙️</div>
+      <div>
+        <div class="menu-item-label" data-fa="تنظیمات" data-en="Settings">تنظیمات</div>
+        <div class="menu-item-sub" data-fa="صدا، تم، زبان..." data-en="Sound, theme, language...">صدا، تم، زبان...</div>
+      </div>
+    </div>
+    <div class="menu-item" onclick="closeMenu();openCatalog()">
+      <div class="menu-item-icon">📖</div>
+      <div>
+        <div class="menu-item-label" data-fa="نمایش همه نقش‌ها" data-en="All Roles">نمایش همه نقش‌ها</div>
+        <div class="menu-item-sub" data-fa="قبل از بازی مطالعه کنید" data-en="Read before playing">قبل از بازی مطالعه
+          کنید</div>
+      </div>
+    </div>
+    <div class="menu-item" onclick="closeMenu();goCardEditor()">
+      <div class="menu-item-icon">🃏</div>
+      <div>
+        <div class="menu-item-label" data-fa="تنظیم کارت‌ها" data-en="Card Setup">تنظیم کارت‌ها</div>
+        <div class="menu-item-sub" data-fa="انتخاب نقش برای بازی" data-en="Choose roles for game">انتخاب نقش برای بازی
+        </div>
+      </div>
+    </div>
+    <div class="menu-item" onclick="toggleTheme()">
+      <div class="menu-item-icon" id="themeMenuIcon">🌙</div>
+      <div>
+        <div class="menu-item-label" id="themeMenuLabel" data-fa-dark="حالت روشن" data-fa-light="حالت تاریک"
+          data-en-dark="Light Mode" data-en-light="Dark Mode">حالت روشن</div>
+      </div>
+    </div>
+    <div class="menu-item" onclick="toggleLang()">
+      <div class="menu-item-icon">🌐</div>
+      <div>
+        <div class="menu-item-label" id="langMenuLabel">English</div>
+        <div class="menu-item-sub" id="langMenuSub">Switch to English</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+     ROLES CATALOG OVERLAY
+════════════════════════════════════════ -->
+  <div id="catalogOverlay">
+    <div class="catalog-header">
+      <div class="screen-header-back" onclick="closeCatalog()">←</div>
+      <div class="screen-header-title" data-fa="📖 همه نقش‌ها" data-en="📖 All Roles">📖 همه نقش‌ها</div>
+    </div>
+    <div class="catalog-body" id="catalogBody"></div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+     SCREEN 1: HOME
+════════════════════════════════════════ -->
+  <div class="screen active" id="s-home">
+    <div class="home-topbar">
+      <button class="btn btn-ghost btn-icon" onclick="openMenu()" style="font-size:1.1rem;">☰</button>
+      <button class="btn btn-ghost btn-icon" onclick="openCatalog()" style="font-size:1rem;"
+        title="همه نقش‌ها">📖</button>
+    </div>
+    <div class="wrap">
+      <div class="logo-section">
+        <div class="site-logo">
+          <!-- ایموجی لوگو — برای تغییر: مقدار زیر را ویرایش کنید -->
+          <span id="logoEmoji" style="position:relative;z-index:1;">
+            <img class="logo"
+              src="https://plain-apac-prod-public.komododecks.com/202606/23/mm1va9RGaMzIAVblRC0r/image.png" alt="">
+          </span>
+        </div>
+        <div class="logo-title" data-fa="مافیا" data-en="Mafia">مافیا</div>
+        <div class="logo-sub" data-fa="تقسیم نقش — بدون کارت" data-en="Role Assignment — No Cards">تقسیم نقش — بدون کارت
+        </div>
+      </div>
+
+      <div class="input-row">
+        <input class="field" id="pInput" data-fa-placeholder="نام بازیکن..." data-en-placeholder="Player name..."
+          placeholder="نام بازیکن..." type="text" onkeydown="if(event.key==='Enter')addPlayer()">
+        <button class="btn btn-red btn-icon" onclick="addPlayer()">+</button>
+      </div>
+
+      <div class="players-area" id="playerChips">
+        <span class="p-empty" data-fa="هنوز کسی اضافه نشده 👥" data-en="No players added yet 👥">هنوز کسی اضافه نشده
+          👥</span>
+      </div>
+      <div class="p-count" id="pCount"></div>
+
+      <div class="mylist-section">
+        <div class="mylist-header" onclick="toggleMyList()">
+          <span class="mylist-header-label" data-fa="📋 لیست من" data-en="📋 My List">📋 لیست من</span>
+          <span class="mylist-arrow" id="mylistArrow">▼</span>
+        </div>
+        <div class="mylist-body" id="mylistBody">
+          <div class="mylist-add-row">
+            <input class="field" id="savedInput" data-fa-placeholder="نام برای ذخیره..."
+              data-en-placeholder="Name to save..." placeholder="نام برای ذخیره..." type="text"
+              style="font-size:.8rem;padding:9px 12px;" onkeydown="if(event.key==='Enter')savePerson()">
+            <button class="btn btn-ghost btn-sm" onclick="savePerson()">💾</button>
+          </div>
+          <div id="savedList"></div>
+          <div class="mylist-actions">
+            <button class="btn btn-ghost btn-sm btn-full" onclick="selectAllSaved()" data-fa="✅ همه" data-en="✅ All">✅
+              همه</button>
+            <button class="btn btn-ghost btn-sm btn-full" onclick="deselectAllSaved()" data-fa="☐ هیچ"
+              data-en="☐ None">☐ هیچ</button>
+            <button class="btn btn-outline btn-sm btn-full" onclick="addFromSaved()" data-fa="➕ اضافه" data-en="➕ Add">➕
+              اضافه</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:16px;padding-bottom:30px;">
+        <button class="btn btn-outline btn-full" onclick="goCardEditor()" data-fa="⚙️ تنظیم کارت‌ها"
+          data-en="⚙️ Card Setup">⚙️ تنظیم کارت‌ها</button>
+        <button class="btn btn-red btn-full" onclick="startGame()" data-fa="✦ شروع بازی" data-en="✦ Start Game">✦ شروع
+          بازی</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+     SCREEN 2: CARD EDITOR
+════════════════════════════════════════ -->
+  <div class="screen" id="s-editor">
+    <div class="screen-header">
+      <div class="screen-header-back" onclick="goScreen('s-home')">←</div>
+      <div>
+        <div class="screen-header-title" data-fa="⚙️ تنظیم کارت‌ها" data-en="⚙️ Card Setup">⚙️ تنظیم کارت‌ها</div>
+        <div class="screen-header-sub" data-fa="تعداد هر نقش را تنظیم کن" data-en="Set count for each role">تعداد هر نقش
+          را تنظیم کن</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="resetCardEditor()" data-fa="↺ پیش‌فرض" data-en="↺ Default">↺
+        پیش‌فرض</button>
+    </div>
+    <div class="wrap" style="padding-top:14px;">
+      <div class="ce-total" id="ceTotalLabel"></div>
+      <div style="height:8px;"></div>
+      <div class="card-editor-list" id="ceList"></div>
+    </div>
+    <div class="bottom-fixed">
+      <button class="btn btn-red btn-full" onclick="applyCards()" data-fa="✦ شروع بازی با این کارت‌ها"
+        data-en="✦ Start Game with These Cards">✦ شروع بازی با این کارت‌ها</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+     SCREEN 3: GAME
+════════════════════════════════════════ -->
+  <div class="screen" id="s-game">
+    <div class="screen-header">
+      <div class="screen-header-back" onclick="confirmRestart()">←</div>
+      <div>
+        <div class="screen-header-title" data-fa="انتخاب بازیکن" data-en="Player Selection">انتخاب بازیکن</div>
+        <div class="screen-header-sub" id="gameSubtitle" data-fa="روی اسمت بزن تا نقشت رو ببینی"
+          data-en="Tap your name to see your role">روی اسمت بزن تا نقشت رو ببینی</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="goScreen('s-settings')">⚙️</button>
+    </div>
+    <div style="padding:12px 18px 0;">
+      <div class="score-row">
+        <div class="score-cell sc-cit">
+          <div class="score-label" data-fa="شهروند" data-en="Citizen">شهروند</div>
+          <div class="score-val" id="sc-cit">0</div>
+        </div>
+        <div class="score-cell sc-rnd">
+          <div class="score-label" data-fa="دور" data-en="Round">دور</div>
+          <div class="score-val" id="sc-rnd">1</div>
+        </div>
+        <div class="score-cell sc-maf">
+          <div class="score-label" data-fa="مافیا" data-en="Mafia">مافیا</div>
+          <div class="score-val" id="sc-maf">0</div>
+        </div>
+      </div>
+      <div class="stopwatch-bar" style="margin-bottom:12px;">
+        <div class="sw-display" id="swDisp">00:00</div>
+        <div class="sw-btns">
+          <button class="btn btn-red btn-sm" id="swBtn" onclick="swToggle()">▶</button>
+          <button class="btn btn-ghost btn-sm" onclick="swReset()">↺</button>
+        </div>
+      </div>
+    </div>
+    <div class="player-list-reveal" id="gameList"></div>
+    <div id="godBtnWrap" style="display:none;padding:0 18px 12px;">
+      <button class="btn btn-gold btn-full" onclick="showGodView()" data-fa="👁 نمایش همه نقش‌ها (گاد)"
+        data-en="👁 Show All Roles (God)">👁 نمایش همه نقش‌ها (گاد)</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+     SCREEN 4: SETTINGS
+════════════════════════════════════════ -->
+  <div class="screen" id="s-settings">
+    <div class="screen-header">
+      <div class="screen-header-back" onclick="goBack()">←</div>
+      <div class="screen-header-title" data-fa="⚙️ تنظیمات" data-en="⚙️ Settings">⚙️ تنظیمات</div>
+    </div>
+    <div class="settings-body">
+
+      <div class="stg-section">
+        <div class="stg-section-title" data-fa="ظاهر" data-en="APPEARANCE">ظاهر</div>
+        <div class="stg-row">
+          <div class="stg-info">
+            <div class="stg-label" data-fa="حالت تاریک / روشن" data-en="Dark / Light Mode">حالت تاریک / روشن</div>
+            <div class="stg-sub" id="themeSubLabel" data-fa-dark="در حال حاضر: تاریک" data-fa-light="در حال حاضر: روشن"
+              data-en-dark="Current: Dark" data-en-light="Current: Light">در حال حاضر: تاریک</div>
+          </div>
+          <div class="sw-toggle" id="sw-theme" onclick="toggleTheme()"></div>
+        </div>
+        <div class="stg-row">
+          <div class="stg-info">
+            <div class="stg-label" data-fa="زبان سایت" data-en="Site Language">زبان سایت</div>
+            <div class="stg-sub" id="langSubLabel">فارسی / English</div>
+          </div>
+          <button class="btn btn-outline btn-sm" id="langToggleBtn" onclick="toggleLang()">English</button>
+        </div>
+      </div>
+
+      <div class="stg-section">
+        <div class="stg-section-title" data-fa="صدا" data-en="SOUND">صدا</div>
+        <div class="stg-row">
+          <div class="stg-info">
+            <div class="stg-label" data-fa="صداهای بازی" data-en="Game Sounds">صداهای بازی</div>
+          </div>
+          <div class="sw-toggle on" id="sw-sound" onclick="toggleSw('sw-sound','sound')"></div>
+        </div>
+        <div class="stg-row">
+          <div class="stg-info">
+            <div class="stg-label" data-fa="صدای نمایش نقش" data-en="Role Reveal Sound">صدای نمایش نقش</div>
+          </div>
+          <div class="sw-toggle on" id="sw-rolesound" onclick="toggleSw('sw-rolesound','roleSound')"></div>
+        </div>
+        <div class="stg-row">
+          <div class="stg-info">
+            <div class="stg-label" data-fa="موزیک پس‌زمینه" data-en="Background Music">موزیک پس‌زمینه</div>
+          </div>
+          <div class="sw-toggle" id="sw-bgmusic" onclick="toggleBgMusic()"></div>
+        </div>
+      </div>
+
+      <div class="stg-section">
+        <div class="stg-section-title" data-fa="بازی" data-en="GAMEPLAY">بازی</div>
+        <div class="stg-row">
+          <div class="stg-info">
+            <div class="stg-label" data-fa="چالش موقع حذف" data-en="Elimination Challenge">چالش موقع حذف</div>
+            <div class="stg-sub" data-fa="فرش قرمز، شلیک نهایی..." data-en="Red carpet, final shot...">فرش قرمز، شلیک
+              نهایی...</div>
+          </div>
+          <div class="sw-toggle on" id="sw-challenge" onclick="toggleSw('sw-challenge','challenge')"></div>
+        </div>
+        <div class="stg-row">
+          <div class="stg-info">
+            <div class="stg-label" data-fa="نمایش تیم در کارت نقش" data-en="Show Team on Role Card">نمایش تیم در کارت
+              نقش</div>
+          </div>
+          <div class="sw-toggle on" id="sw-team" onclick="toggleSw('sw-team','showTeam')"></div>
+        </div>
+        <div class="stg-row">
+          <div class="stg-info">
+            <div class="stg-label" data-fa="زمان نمایش نقش (ثانیه)" data-en="Role Display Time (sec)">زمان نمایش نقش
+              (ثانیه)</div>
+          </div>
+          <div class="num-row">
+            <div class="n-btn" onclick="changeN('revealTime',-1)">−</div>
+            <div class="n-val" id="nv-revealTime">10</div>
+            <div class="n-btn" onclick="changeN('revealTime',1)">+</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stg-section">
+        <div class="stg-section-title" data-fa="سناریوها" data-en="SCENARIOS">سناریوها</div>
+        <div id="scenList"></div>
+      </div>
+
+      <div class="stg-section">
+        <div class="stg-section-title">🎰 تقلب — نقش اجباری</div>
+        <div id="cheatList" style="margin-bottom:8px;"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <input class="field" id="cheatName" placeholder="نام بازیکن..."
+            style="flex:1;min-width:100px;font-size:.8rem;padding:9px 11px;margin-bottom:0;">
+          <select id="cheatRole"
+            style="flex:1;min-width:120px;background:var(--bg3);border:1.5px solid var(--line);border-radius:var(--r2);padding:9px 11px;color:var(--txt);font-family:Vazirmatn,sans-serif;font-size:.8rem;outline:none;cursor:pointer;">
+            <option value="">-- نقش --</option>
+          </select>
+          <button class="btn btn-red btn-sm" onclick="addCheat()" style="flex-shrink:0;white-space:nowrap;">+
+            اضافه</button>
+        </div>
+        <div style="font-size:.7rem;color:var(--txt3);margin-top:8px;line-height:1.5;">اگر اسم بازیکن در لیست باشد،
+          حتماً همان نقش به او داده می‌شود.</div>
+      </div>
+
+    </div>
+    <div class="bottom-fixed">
+      <button class="btn btn-red btn-full" onclick="saveSettings()" data-fa="💾 ذخیره تنظیمات"
+        data-en="💾 Save Settings">💾 ذخیره تنظیمات</button>
+    </div>
+  </div>
+
+  <!-- ════════ OVERLAYS ════════ -->
+  <div id="roleOverlay" onclick="closeRoleCard()">
+    <div class="role-card" onclick="event.stopPropagation()" id="roleCardEl">
+      <div class="role-card-top" id="rcTop">
+        <div class="rc-player" id="rcPlayer"></div>
+        <div class="rc-emoji" id="rcEmoji">
+          <img class="logo"
+            src="https://plain-apac-prod-public.komododecks.com/202606/23/mm1va9RGaMzIAVblRC0r/image.png" alt="">
+        </div>
+        <div class="rc-name" id="rcName"></div>
+        <div class="rc-team" id="rcTeam"></div>
+      </div>
+      <div class="role-card-desc" id="rcDesc"></div>
+      <div class="role-countdown" id="rcCountdown"></div>
+      <div class="role-timer-wrap">
+        <div class="role-timer-bar" id="rcTimerBar"></div>
+      </div>
+    </div>
+    <div class="ro-hint" id="roHint">برای بستن لمس کنید</div>
+  </div>
+
+  <div id="godOverlay">
+    <div style="max-width:480px;margin:0 auto;">
+      <div class="god-header">
+        <div class="god-title" data-fa="👁 همه نقش‌ها" data-en="👁 All Roles">👁 همه نقش‌ها</div>
+        <button class="btn btn-ghost btn-sm" onclick="hideGodView()">✕</button>
+      </div>
+      <div class="god-grid" id="godGrid"></div>
+    </div>
+  </div>
+
+  <div class="popup-overlay" id="challengePopup">
+    <div class="popup-box">
+      <div class="popup-icon" id="chIcon">⚔️</div>
+      <div class="popup-title" id="chTitle">چالش</div>
+      <div class="popup-sub" id="chDesc"></div>
+      <div class="popup-btns">
+        <button class="btn btn-gold btn-full" onclick="closeChallenge()" data-fa="✓ فهمیدم" data-en="✓ Got It">✓
+          فهمیدم</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="popup-overlay" id="winnerPopup">
+    <div class="popup-box">
+      <div class="popup-icon" id="winIcon">🏆</div>
+      <div class="popup-title" id="winTitle">برنده!</div>
+      <div class="popup-sub" id="winSub"></div>
+      <div class="popup-btns">
+        <button class="btn btn-outline btn-full" onclick="closeWinner()" data-fa="ادامه"
+          data-en="Continue">ادامه</button>
+        <button class="btn btn-red btn-full" onclick="newGame()" data-fa="🔄 جدید" data-en="🔄 New">🔄 جدید</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmModal">
+    <div class="confirm-box">
+      <div class="confirm-title" data-fa="مطمئنی؟" data-en="Are you sure?">مطمئنی؟</div>
+      <div class="confirm-sub" data-fa="این عمل قابل بازگشت نیست." data-en="This action cannot be undone.">این عمل قابل
+        بازگشت نیست.</div>
+      <div class="confirm-btns">
+        <button class="btn btn-outline btn-full" onclick="closeConfirm()" data-fa="لغو" data-en="Cancel">لغو</button>
+        <button class="btn btn-red btn-full" onclick="doRestart()" data-fa="بله" data-en="Yes">بله</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    /* ═══════════════════════════════════════════════════════════════
+       ROLES DATA
+       ───────────────────────────────────────────────────────────────
+       برای هر نقش:
+         emoji    — ایموجی پیش‌فرض (قابل تغییر)
+         img      — مسیر PNG (پیش‌فرض null؛ اگر مقدار دهید، img نمایش داده می‌شود)
+         cardBg   — کلاس CSS رنگ پس‌زمینه کارت (rc-xxx)
+         nameEn   — نام انگلیسی
+         descEn   — توضیح انگلیسی
+       ═══════════════════════════════════════════════════════════════ */
+    const ROLES = [
+      /* ── شهروندان ── */
+      {
+        id: 'citizen', name: 'شهروند', nameEn: 'Citizen', emoji: '👤', img: null, team: 'citizen', cardBg: 'rc-citizen',
+        desc: 'عضو عادی شهر. در روز مافیا را شناسایی و حذف کن.',
+        descEn: 'A regular city member. Identify and eliminate the mafia during the day.'
+      },
+      {
+        id: 'doctor', name: 'دکتر', nameEn: 'Doctor', emoji: '👨‍⚕️', img: null, team: 'citizen', cardBg: 'rc-doctor',
+        desc: 'هر شب یک نفر را نجات می‌دهد. نمی‌تواند دو شب پشت سر هم یک نفر را نجات دهد.',
+        descEn: 'Saves one person each night. Cannot save the same person two nights in a row.'
+      },
+      {
+        id: 'detective', name: 'کاراگاه', nameEn: 'Detective', emoji: '🔍', img: null, team: 'citizen', cardBg: 'rc-detective',
+        desc: 'هر شب هویت یک نفر را می‌پرسد. گاد می‌گوید مافیا است یا نه.',
+        descEn: 'Asks about one person\'s identity each night. God says mafia or not.'
+      },
+      {
+        id: 'sniper', name: 'تک‌تیرانداز', nameEn: 'Sniper', emoji: '🎯', img: null, team: 'citizen', cardBg: 'rc-sniper',
+        desc: 'یک بار در بازی می‌تواند کسی را حذف کند. اشتباه؟ خودت حذف می‌شوی!',
+        descEn: 'Can eliminate someone once in the game. Wrong choice? You get eliminated!'
+      },
+      {
+        id: 'psycho', name: 'روان‌پزشک', nameEn: 'Psychiatrist', emoji: '🧠', img: null, team: 'citizen', cardBg: 'rc-psycho',
+        desc: 'هر شب یک مافیا را خواب می‌کند. آن مافیا آن شب نمی‌تواند عمل کند.',
+        descEn: 'Puts one mafia to sleep each night. That mafia cannot act that night.'
+      },
+      {
+        id: 'guard', name: 'محافظ', nameEn: 'Guard', emoji: '🛡️', img: null, team: 'citizen', cardBg: 'rc-guard',
+        desc: 'هر شب از یک نفر محافظت می‌کند. دسترسی همه به آن شخص قطع می‌شود.',
+        descEn: 'Protects one person each night. Blocks all access to that person.'
+      },
+      {
+        id: 'hardman', name: 'جان‌سخت', nameEn: 'Hard Man', emoji: '💪', img: null, team: 'citizen', cardBg: 'rc-hardman',
+        desc: 'اولین بار که حذف می‌شود زنده می‌ماند. یک شانس اضافه دارد.',
+        descEn: 'Survives the first elimination. Has one extra life.'
+      },
+      {
+        id: 'interrogator', name: 'بازپرس', nameEn: 'Interrogator', emoji: '⚖️', img: null, team: 'citizen', cardBg: 'rc-interrogator',
+        desc: 'در روز یک بار می‌تواند از یک نفر بازجویی کند. باید جواب صادقانه بدهد.',
+        descEn: 'Can interrogate one person per day. They must answer honestly.'
+      },
+      {
+        id: 'boxer', name: 'بوکسور', nameEn: 'Boxer', emoji: '🥊', img: null, team: 'citizen', cardBg: 'rc-boxer',
+        desc: 'در بازی می‌تواند دو نفر را بی‌هوش کند. آن‌ها یک شب نمی‌توانند عمل کنند.',
+        descEn: 'Can knock out two players in the game. They cannot act for one night.'
+      },
+      {
+        id: 'mayor', name: 'شهردار', nameEn: 'Mayor', emoji: '🏛️', img: null, team: 'citizen', cardBg: 'rc-mayor',
+        desc: 'رأی او در رأی‌گیری روز دو برابر است. قدرت تصمیم‌گیری بیشتری دارد.',
+        descEn: 'Vote counts double during day voting. Has greater decision-making power.'
+      },
+      {
+        id: 'spy', name: 'جاسوس', nameEn: 'Spy', emoji: '🕵️', img: null, team: 'citizen', cardBg: 'rc-spy',
+        desc: 'از طرف شهروندان هر شب می‌تواند هویت یک نفر از مافیا را به گاد اعلام کند.',
+        descEn: 'Can report one mafia member\'s identity to God each night.'
+      },
+      {
+        id: 'blacksmith', name: 'آهنگر', nameEn: 'Blacksmith', emoji: '🔨', img: null, team: 'citizen', cardBg: 'rc-blacksmith',
+        desc: 'هر شب یک نفر را انتخاب می‌کند. نفر انتخاب شده یک سپر دریافت می‌کند که با یک شات حذف نمی‌شود. (به خودش نمی‌تواند سپر بدهد)',
+        descEn: 'Chooses someone each night who receives a shield that protects from one shot. Cannot shield self.'
+      },
+      {
+        id: 'angel', name: 'فرشته نجات', nameEn: 'Guardian Angel', emoji: '👼', img: null, team: 'citizen', cardBg: 'rc-angel',
+        desc: 'فقط یک بار می‌تواند بیدار شود. گاد مردگان همان شب را نشان می‌دهد و او باید یکی را نجات دهد.',
+        descEn: 'Can wake up only once. God shows that night\'s deaths and the angel must save one.'
+      },
+      {
+        id: 'drjamshid', name: 'دکتر جمشید', nameEn: 'Dr. Jamshid', emoji: '🧬', img: null, team: 'citizen', cardBg: 'rc-drjamshid',
+        desc: 'می‌تواند یک بار در بازی یکی از مردگان را به بازی برگرداند.',
+        descEn: 'Can bring one dead player back into the game once per game.'
+      },
+      {
+        id: 'coinkeen', name: 'همشهری کین', nameEn: 'Coin Keen', emoji: '🪙', img: null, team: 'citizen', cardBg: 'rc-coinkeen',
+        desc: 'در شب یکی را انتخاب می‌کند. اگر آن شخص مافیا باشد، صبح همان روز توسط گاد اعلام می‌شود و همشهری کین شب بعد می‌میرد.',
+        descEn: 'Chooses someone at night. If they are mafia, God announces it next morning — and Coin Keen dies the following night.'
+      },
+      {
+        id: 'bellman', name: 'ناقوس‌زن', nameEn: 'Bell Ringer', emoji: '🔔', img: null, team: 'citizen', cardBg: 'rc-bellman',
+        desc: 'شب یک نفر را انتخاب می‌کند. اگر آن شخص بمیرد، روز بعد اطلاعاتی به شهر می‌رسد.',
+        descEn: 'Selects someone at night. If that person dies, information reaches the city next day.'
+      },
+      {
+        id: 'judge', name: 'قاضی', nameEn: 'Judge', emoji: '⚖️', img: null, team: 'citizen', cardBg: 'rc-judge',
+        desc: 'یک بار در بازی می‌تواند نتیجه رأی‌گیری را لغو کند.',
+        descEn: 'Can nullify one day vote result once per game.'
+      },
+      {
+        id: 'archivist', name: 'آرشیودار', nameEn: 'Archivist', emoji: '📚', img: null, team: 'citizen', cardBg: 'rc-archivist',
+        desc: 'اطلاعات نقش‌های حذف‌شده را جمع‌آوری می‌کند و در زمان مناسب استفاده می‌کند.',
+        descEn: 'Collects information about eliminated roles and uses it at the right time.'
+      },
+      {
+        id: 'twins', name: 'دوقلوها', nameEn: 'Twins', emoji: '👯', img: null, team: 'citizen', cardBg: 'rc-twins',
+        desc: 'دو شهروند هستند که همدیگر را می‌شناسند. اگر یکی بمیرد، دیگری اطلاعات مهمی به دست می‌آورد.',
+        descEn: 'Two citizens who know each other. If one dies, the other gains important information.'
+      },
+      {
+        id: 'hunter', name: 'هانتر', nameEn: 'Hunter', emoji: '🔫', img: null, team: 'citizen', cardBg: 'rc-hunter',
+        desc: 'وقتی حذف می‌شود می‌تواند یک نفر را با خودش ببرد. قبل از مرگ شلیک می‌کند!',
+        descEn: 'When eliminated, can take one person with them. Shoots before dying!'
+      },
+      {
+        id: 'mirror', name: 'آینه‌دار', nameEn: 'Mirror Holder', emoji: '🪞', img: null, team: 'citizen', cardBg: 'rc-mirror',
+        desc: 'بعضی حملات یا توانایی‌های شبانه را به صاحبشان برمی‌گرداند.',
+        descEn: 'Reflects some night attacks or abilities back to their owner.'
+      },
+      {
+        id: 'informer', name: 'خبرچین', nameEn: 'Informant', emoji: '🦅', img: null, team: 'citizen', cardBg: 'rc-informer',
+        desc: 'اطلاعات محدودی درباره فعالیت‌های شبانه به دست می‌آورد و هر شب گزارش می‌دهد.',
+        descEn: 'Gets limited info about nightly activities and reports each night.'
+      },
+      {
+        id: 'atar', name: 'عطار', nameEn: 'atar', emoji: '🧪', img: null, team: 'citizen', cardBg: 'rc-informer',
+        desc: 'می‌تواند از توانایی‌های دارویی برای نجات یا مسموم‌کردن استفاده کند.',
+        descEn: ''
+      },
+      {
+        id: 'maznon', name: 'مظنون', nameEn: 'maznon', emoji: '🤥', img: null, team: 'citizen', cardBg: 'rc-informer',
+        desc: 'نقشی شهروندی با ویژگی خاص که می‌تواند در استعلام‌ها باعث ایجاد شک و ابهام شود.',
+        descEn: ''
+      },
+      {
+        id: 'vares', name: 'وارث', nameEn: 'vares', emoji: '😏', img: null, team: 'citizen', cardBg: 'rc-informer',
+        desc: 'در صورت مرگ یک نقش خاص، ممکن است توانایی یا نقش او را به ارث ببرد.',
+        descEn: ''
+      },
+      {
+        id: 'gard', name: 'نگهبان', nameEn: 'gard', emoji: '👔', img: null, team: 'citizen', cardBg: 'rc-informer',
+        desc: 'از یک بازیکن محافظت می‌کند و در برابر بعضی حملات یا توانایی‌ها نقش دفاعی دارد.',
+        descEn: ''
+      },
+      {
+        id: 'takavar', name: 'تکاور', nameEn: 'takavar', emoji: '✊', img: null, team: 'citizen', cardBg: 'rc-informer',
+        desc: 'اگر مافیا در شب به او شلیک کند، می‌تواند در همان شب یک نفر را شات کند؛ تیرش روی رئیس مافیا اثر ندارد.',
+        descEn: ''
+      },
+      {
+        id: 'guny', name: 'تفنگدار', nameEn: 'guny', emoji: '😎', img: null, team: 'citizen', cardBg: 'rc-informer',
+        desc: 'دو اسلحه(یکیش خرابه یکیش کار میکنه) به یک بازیکن می‌دهد که معمولاً برای شلیک در اختیار او قرار می‌گیرد.',
+        descEn: ''
+      },
+      {
+        id: 'guny', name: 'تفنگدار', nameEn: 'guny', emoji: '😎', img: null, team: 'citizen', cardBg: 'rc-informer',
+        desc: 'دو اسلحه(یکیش خرابه یکیش کار میکنه) به یک بازیکن می‌دهد که معمولاً برای شلیک در اختیار او قرار می‌گیرد.',
+        descEn: ''
+      },
+      {
+        id: 'mohageg', name: 'محقق', nameEn: 'mohageg', emoji: '😉', img: null, team: 'citizen', cardBg: 'rc-informer',
+        desc: 'در شب درباره نقش یک بازیکن اطلاعات می‌گیرد.',
+        descEn: ''
+      },
+      {
+        id: 'leo', name: 'لئون حرفه‌ای', nameEn: 'leo', emoji: '😬', img: null, team: 'citizen', cardBg: 'rc-informer',
+        desc: 'یک تیر دارد و می‌تواند به یک نفر شلیک کند؛ پدرخوانده با اولین تیر لئون زنده می‌ماند.',
+        descEn: ''
+      },
+      {
+        id: 'lover', name: 'معشوقه', nameEn: 'Lover', emoji: '💋', img: null, team: 'citizen', cardBg: 'rc-informer',
+        desc: 'هر شب یک بازیکن را انتخاب می‌کند و آن بازیکن در همان شب نمی‌تواند از قابلیت نقش خود استفاده کند؛ اگر معشوقه کشته شود، بازیکن انتخاب‌شده نیز معمولاً همراه او از بازی خارج می‌شود (بسته به قوانین سناریو).',
+        descEn: ''
+      },
+      /* ── مافیا ── */
+      {
+        id: 'mafia', name: 'مافیا', nameEn: 'Mafia', emoji: '🕴️', img: null, team: 'mafia', cardBg: 'rc-mafia',
+        desc: 'هر شب با هماهنگی تیم یک شهروند را حذف می‌کنند. هویت خود را پنهان کن.',
+        descEn: 'Eliminates one citizen per night with the team. Hide your identity.'
+      },
+      {
+        id: 'godfather', name: 'پدرخوانده', nameEn: 'Godfather', emoji: '👑', img: null, team: 'mafia', cardBg: 'rc-godfather',
+        desc: 'رهبر مافیا. اگر کاراگاه هویتش را بپرسد، شهروند نشان می‌دهد.',
+        descEn: 'Mafia leader. Shows as Citizen when detective investigates.'
+      },
+      {
+        id: 'denmafia', name: 'دن مافیا', nameEn: 'Don Mafia', emoji: '😈', img: null, team: 'mafia', cardBg: 'rc-godfather',
+        desc: 'رهبر مافیا؛ استعلامش برای کارآگاه منفی است و یک پادزهر دارد.',
+        descEn: ''
+      },
+      {
+        id: 'soul', name: 'ساول گودمن (بزنگید به ساول)', nameEn: 'soul goodman', emoji: '🥶', img: null, team: 'mafia', cardBg: 'rc-godfather',
+        desc: 'اگر یکی از اعضای مافیا حذف شود، می‌تواند با مذاکره یک شهروند ساده را به مافیا تبدیل کند.',
+        descEn: ''
+      },
+      {
+        id: 'matador', name: 'ماتادور', nameEn: 'matador', emoji: '👾', img: null, team: 'mafia', cardBg: 'rc-godfather',
+        desc: 'هر شب توانایی یک بازیکن را برای همان شب از کار می‌اندازد.',
+        descEn: ''
+      },
+      {
+        id: 'lector', name: 'دکتر لکتر', nameEn: 'Dr. Lecter', emoji: '🦷', img: null, team: 'mafia', cardBg: 'rc-lector',
+        desc: 'دکتر تیم مافیا. هر شب می‌تواند یکی از اعضای تیمش را نجات دهد.',
+        descEn: 'Mafia\'s doctor. Can save one team member each night.'
+      },
+      {
+        id: 'nato', name: 'ناتو', nameEn: 'NATO', emoji: '💣', img: null, team: 'mafia', cardBg: 'rc-nato',
+        desc: 'اگر در روز حذف شود، یک شهروند مجاور را هم با خود می‌برد.',
+        descEn: 'If eliminated during the day, takes an adjacent citizen with them.'
+      },
+      {
+        id: 'hostage', name: 'گروگانگیر', nameEn: 'Hostage Taker', emoji: '🔗', img: null, team: 'mafia', cardBg: 'rc-hostage',
+        desc: 'هر شب می‌تواند یک شهروند را گروگان بگیرد. آن شخص یک شب عمل نمی‌کند.',
+        descEn: 'Can take one citizen hostage each night. That person cannot act.'
+      },
+      {
+        id: 'mafiaspy', name: 'جاسوس مافیا', nameEn: 'Mafia Spy', emoji: '🕶️', img: null, team: 'mafia', cardBg: 'rc-mafiaspy',
+        desc: 'جاسوس تیم مافیا. می‌تواند هویت شهروندان خاص را به تیم مافیا گزارش دهد.',
+        descEn: 'Mafia spy. Can report special citizens\' identities to the mafia team.'
+      },
+      {
+        id: 'killer', name: 'جلاد', nameEn: 'Killer', emoji: '🔪', img: null, team: 'mafia', cardBg: 'rc-serialkiller',
+        desc: 'اگر با رأی‌گیری روز از بازی خارج شود، می‌تواند یک نفر را همراه خودش حذف کند.',
+        descEn: 'Kills one person every night. On no team. Wins if the last one standing.'
+      },
+      {
+        id: 'wizard', name: 'جادوگر', nameEn: 'Wizard', emoji: '🧙', img: null, team: 'mafia', cardBg: 'rc-wizard',
+        desc: 'هر شب یک بازیکن را انتخاب می‌کند و توانایی شبانه او را مختل یا تغییر می‌دهد.',
+        descEn: 'Can affect some role results — e.g. make detective inquiries return false results.'
+      },
+      {
+        id: 'double', name: 'بدل‌کار', nameEn: 'Double', emoji: '🎭', img: null, team: 'mafia', cardBg: 'rc-double',
+        desc: 'بعد از مرگ یک نفر، نقش او را می‌گیرد و با توانایی آن نقش ادامه می‌دهد.',
+        descEn: 'Takes the role of someone who dies and continues with their ability.'
+      },
+      {
+        id: 'infiltrator', name: 'نفوذی', nameEn: 'Infiltrator', emoji: '🦹', img: null, team: 'mafia', cardBg: 'rc-infiltrator',
+        desc: 'خودش را شهروند نشان می‌دهد و اطلاعات غلط در شهر پخش می‌کند.',
+        descEn: 'Appears as a citizen and spreads misinformation in the city.'
+      },
+      {
+        id: 'poisoner', name: 'سم‌پاش', nameEn: 'Poisoner', emoji: '☠️', img: null, team: 'mafia', cardBg: 'rc-poisoner',
+        desc: 'به جای کشتن فوری، بازیکن را مسموم می‌کند تا بعداً (دور بعدی) بمیرد.',
+        descEn: 'Poisons a player instead of killing instantly; they die the next round.'
+      },
+      {
+        id: 'mterrorist', name: 'تروریست', nameEn: 'Terrorist', emoji: '💣', img: null, team: 'mafia', cardBg: 'rc-mterrorist',
+        desc: 'اگر در رأی‌گیری حذف شود، می‌تواند یک نفر دیگر را با خود ببرد. انگار به خودش بمب بسته است.',
+        descEn: 'If voted out, can take someone with them. Like a human bomb.'
+      },
+      {
+        id: 'lawyer', name: 'وکیل', nameEn: 'Lawyer', emoji: '👔', img: null, team: 'mafia', cardBg: 'rc-lawyer',
+        desc: 'شب با مافیا بیدار می‌شود. هر کس را انتخاب کند استعلام آن برعکس می‌شود. حتی می‌تواند خودش را انتخاب کند.',
+        descEn: 'Wakes with mafia. Whoever is chosen, their investigation result flips. Can choose self.'
+      },
+      {
+        id: 'lover', name: 'معشوقه', nameEn: 'Lover', emoji: '💋', img: null, team: 'mafia', cardBg: 'rc-lawyer',
+        desc: 'هر شب یک بازیکن را انتخاب می‌کند و آن بازیکن در همان شب نمی‌تواند از قابلیت نقش خود استفاده کند؛ اگر معشوقه کشته شود، بازیکن انتخاب‌شده نیز معمولاً همراه او از بازی خارج می‌شود (بسته به قوانین سناریو).',
+        descEn: ''
+      },
+      /* ── مستقل ── */
+      {
+        id: 'joker', name: 'جوکر', nameEn: 'Joker', emoji: '🃏', img: null, team: 'indie', cardBg: 'rc-joker',
+        desc: 'مستقل. اگر در رأی‌گیری روز حذف شود، برنده است!',
+        descEn: 'Independent. Wins if voted out during the day!'
+      },
+      {
+        id: 'terrorist', name: 'بمب‌گذار', nameEn: 'Bomber', emoji: '💥', img: null, team: 'indie', cardBg: 'rc-terrorist',
+        desc: 'اگر در رأی‌گیری حذف شود، می‌تواند یک نفر دیگر را با خود ببرد.',
+        descEn: 'If voted out, can take another player with them.'
+      },
+      {
+        id: 'zodiac', name: 'زودیاک', nameEn: 'Zodiac', emoji: '♋', img: null, team: 'indie', cardBg: 'rc-zodiac',
+        desc: 'دارای زره است که قبل از بازی اعلام می‌شود. شب‌های زوج بیدار می‌شود و یکی را شات می‌کند. شرط برد: جزء سه نفر آخر بودن. (استعلام کاراگاه منفی است)',
+        descEn: 'Has armor announced before game. Wakes on even nights to shoot someone. Wins if in top 3. (Detective shows negative.)'
+      },
+      {
+        id: 'sherlock', name: 'شرلوک', nameEn: 'Sherlock', emoji: '🔎', img: null, team: 'indie', cardBg: 'rc-sherlock',
+        desc: 'شب قبل از مافیا بیدار می‌شود و باید نقش یک نفر را درست حدس بزند. اگر درست باشد، آن شخص سلاخی می‌شود و شرلوک نقشش را می‌گیرد. (اگر آخر بازی با یک مافیا و یک شهروند بماند، برنده می‌شود)',
+        descEn: 'Wakes before mafia and must guess a player\'s role correctly. If correct, that person is slaughtered and Sherlock takes their role. (Wins if last 3 are Sherlock, 1 mafia, 1 citizen.)'
+      },
+      {
+        id: 'double2', name: 'بدل', nameEn: 'Decoy', emoji: '👥', img: null, team: 'indie', cardBg: 'rc-double2',
+        desc: 'اگر بمیرد، یک نفر دیگر به جای او از بازی خارج می‌شود.',
+        descEn: 'If they die, someone else leaves the game instead of them.'
+      },
+      {
+        id: 'traitor', name: 'خیانتکار', nameEn: 'Traitor', emoji: '🔄', img: null, team: 'indie', cardBg: 'rc-traitor',
+        desc: 'اول مستقل است. ممکن است در اواخر بازی به مافیا یا شهروندها بپیوندد.',
+        descEn: 'Starts independent. May join the mafia or citizens later in the game.'
+      },
+      {
+        id: 'zombie', name: 'زامبی', nameEn: 'Zombie', emoji: '🧟', img: null, team: 'indie', cardBg: 'rc-zombie',
+        desc: 'افراد را آلوده می‌کند. اگر همه بازیکنان آلوده شوند، برنده می‌شود.',
+        descEn: 'Infects players. Wins if all players become infected.'
+      },
+      {
+        id: 'cursed', name: 'نفرین‌شده', nameEn: 'Cursed', emoji: '🔮', img: null, team: 'indie', cardBg: 'rc-cursed',
+        desc: 'اگر هدف حمله خاصی قرار بگیرد، به تیم دیگری تبدیل می‌شود.',
+        descEn: 'If targeted by a specific attack, transforms into a different team.'
+      },
+      {
+        id: 'fox', name: 'روباه', nameEn: 'Fox', emoji: '🦊', img: null, team: 'indie', cardBg: 'rc-fox',
+        desc: 'هر شب سه نفر را بررسی می‌کند. اگر بین آن‌ها مافیا نباشد، می‌میرد.',
+        descEn: 'Checks three players each night. If none are mafia, the Fox dies.'
+      },
+      {
+        id: 'executioner', name: 'نوستراداموس', nameEn: 'Executioner', emoji: '❓', img: null, team: 'indie', cardBg: 'rc-executioner',
+        desc: 'در شب معارفه چند نفر را انتخاب می‌کند و تعداد مافیاهای بین آن‌ها را می‌فهمد؛ سپس باید برنده بازی را پیش‌ بینی کند و طبق شرایط نقش، در مسیر برد یکی از سایدها قرار می‌گیرد.',
+        descEn: ''
+      },
+    ];
+
+    /* ════ CHALLENGES ════ */
+    const CHALLENGES = [
+      { icon: '🎩', fa: 'فرش قرمز', en: 'Red Carpet', descFa: 'قبل از حذف ۳۰ ثانیه سخنرانی کن. بازیکنان می‌توانند سوال بپرسند.', descEn: 'Give a 30-second speech before elimination. Players can ask questions.' },
+      { icon: '🔫', fa: 'شلیک نهایی', en: 'Final Shot', descFa: 'قبل از حذف یک نفر را نام ببر. اگر مافیا باشد هر دو حذف می‌شوید!', descEn: 'Name one player before elimination. If they are mafia, you both get eliminated!' },
+      { icon: '📜', fa: 'وصیت', en: 'Last Will', descFa: 'یک وصیت ۲۰ کلمه‌ای بنویس که بعد از حذفت خوانده شود.', descEn: 'Write a 20-word will that gets read after your elimination.' },
+      { icon: '🛡️', fa: 'دفاع آخر', en: 'Last Defense', descFa: '۶۰ ثانیه از خودت دفاع کن. بعد رأی‌گیری دوباره انجام می‌شود.', descEn: 'Defend yourself for 60 seconds. Voting happens again after.' },
+      { icon: '🎯', fa: 'دوئل', en: 'Duel', descFa: 'یک نفر را به دوئل دعوت کن. هر کس اشتباه جواب دهد حذف می‌شود.', descEn: 'Challenge someone to a duel. Whoever answers wrong gets eliminated.' },
+      { icon: '🎲', fa: 'شانس مجدد', en: 'Second Chance', descFa: 'سکه انداخته می‌شود. شیر: آزادی — خط: حذف.', descEn: 'A coin is flipped. Heads: freedom — Tails: elimination.' },
+      { icon: '🤫', fa: 'راز پنهان', en: 'Hidden Secret', descFa: 'باید یک راز درون بازی فاش کنی. دروغ گفتی؟ اعتراف کن!', descEn: 'Reveal one in-game secret. Have you lied? Confess!' },
+    ];
+
+    /* ════ SCENARIOS ════ */
+    const SCENARIOS = [
+      { id: 'night', fa: 'عملیات شبانه', en: 'Night Operations', descFa: 'شب‌ها نقش‌های شبانه ترتیب خاصی دارند.', descEn: 'Nightly roles follow a special sequence.', tags: ['۵+ نفر', 'پیشرفته'] },
+      { id: 'silent', fa: 'مافیای خاموش', en: 'Silent Mafia', descFa: 'مافیاها در شب فقط با اشاره ارتباط برقرار می‌کنند.', descEn: 'Mafia can only communicate by gestures at night.', tags: ['سخت', 'خلاقانه'] },
+      { id: 'mystery', fa: 'معمای قتل', en: 'Murder Mystery', descFa: 'بازی با داستان شروع می‌شود. با سرنخ‌ها قاتل را پیدا کنید.', descEn: 'Game starts with a story. Find the killer using clues.', tags: ['داستانی', 'جذاب'] },
+      { id: 'speed', fa: 'مافیای سرعتی', en: 'Speed Mafia', descFa: 'هر دور ۲ دقیقه. صحبت‌ها کوتاه و رأی‌گیری سریع.', descEn: '2 minutes per round. Short talks and fast voting.', tags: ['سریع', 'رقابتی'] },
+      { id: 'classic', fa: 'کلاسیک', en: 'Classic', descFa: 'قوانین استاندارد مافیا بدون هیچ تغییری.', descEn: 'Standard mafia rules with no changes.', tags: ['پیش‌فرض'] },
+    ];
+
+    /* ════════════════════════════════
+       STATE
+    ════════════════════════════════ */
+    const S = {
+      players: [], saved: [], cheats: [],
+      cardCounts: {},
+      assigned: [], revealed: [], eliminated: [],
+      scores: { cit: 0, maf: 0, rnd: 1 },
+      settings: { sound: true, roleSound: true, challenge: true, showTeam: true, revealTime: 10, bgMusic: false, theme: 'dark', lang: 'fa' },
+      selScenario: null, prevScreen: 's-home',
+      sw: { running: false, sec: 0, iv: null },
+      revealIdx: null, revealIv: null, pendingElim: null,
+    };
+
+    /* ══ DEFAULT COUNTS ══ */
+    function defaultCounts() {
+      const n = S.players.length || 6;
+      const c = {};
+      ROLES.forEach(r => c[r.id] = 0);
+      /* Auto balance by player count */
+      const mafN = Math.max(1, Math.floor(n / 3));
+      c['godfather'] = 1;
+      const mafPool = ['mafia', 'lector', 'nato', 'hostage', 'mafiaspy', 'infiltrator', 'poisoner', 'lawyer', 'negotiator', 'mterrorist'];
+      for (let i = 1; i < mafN; i++) c[mafPool[(i - 1) % mafPool.length]] = (c[mafPool[(i - 1) % mafPool.length]] || 0) + 1;
+      if (n >= 5) c['doctor'] = 1;
+      if (n >= 6) c['detective'] = 1;
+      if (n >= 7) c['sniper'] = 1;
+      if (n >= 8) c['mayor'] = 1;
+      if (n >= 9) c['hardman'] = 1;
+      if (n >= 10) c['boxer'] = 1;
+      if (n >= 11) c['interrogator'] = 1;
+      if (n >= 12) c['joker'] = 1;
+      if (n >= 13) c['terrorist'] = 1;
+      if (n >= 14) c['hunter'] = 1;
+      while (Object.values(c).reduce((a, b) => a + b, 0) < n) c['citizen'] = (c['citizen'] || 0) + 1;
+      return c;
+    }
+    S.cardCounts = defaultCounts();
+
+    /* ════════ AUDIO ENGINE ════════ */
+    let actx = null;
+    function getAC() { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); return actx; }
+    function beep(f = 440, d = .1, t = 'sine', v = .25) {
+      if (!S.settings.sound) return;
+      try { const ac = getAC(), o = ac.createOscillator(), g = ac.createGain(); o.connect(g); g.connect(ac.destination); o.frequency.value = f; o.type = t; g.gain.setValueAtTime(v, ac.currentTime); g.gain.exponentialRampToValueAtTime(.0001, ac.currentTime + d); o.start(); o.stop(ac.currentTime + d); } catch (e) { }
+    }
+    function sndClick() { beep(750, .06, 'square', .12); }
+    function sndSelect() { beep(560, .1, 'sine', .18); }
+    function sndReveal() {
+      if (!S.settings.roleSound) return;
+      try { const ac = getAC(), t = ac.currentTime;[280, 420, 560, 840].forEach((f, i) => { const o = ac.createOscillator(), g = ac.createGain(); o.connect(g); g.connect(ac.destination); o.frequency.value = f; o.type = 'sine'; g.gain.setValueAtTime(0, t + i * .08); g.gain.linearRampToValueAtTime(.22, t + i * .08 + .05); g.gain.exponentialRampToValueAtTime(.001, t + i * .08 + .28); o.start(t + i * .08); o.stop(t + i * .08 + .3); }); } catch (e) { }
+    }
+    function sndElim() {
+      if (!S.settings.sound) return;
+      try { const ac = getAC(), o = ac.createOscillator(), g = ac.createGain(); o.connect(g); g.connect(ac.destination); o.frequency.setValueAtTime(180, ac.currentTime); o.frequency.exponentialRampToValueAtTime(60, ac.currentTime + .5); o.type = 'sawtooth'; g.gain.setValueAtTime(.28, ac.currentTime); g.gain.exponentialRampToValueAtTime(.001, ac.currentTime + .5); o.start(); o.stop(ac.currentTime + .5); } catch (e) { }
+    }
+    function sndWin() {
+      if (!S.settings.sound) return;
+      try { const ac = getAC(), t = ac.currentTime;[523, 659, 784, 1047].forEach((f, i) => { const o = ac.createOscillator(), g = ac.createGain(); o.connect(g); g.connect(ac.destination); o.frequency.value = f; g.gain.setValueAtTime(.18, t + i * .14); g.gain.exponentialRampToValueAtTime(.001, t + i * .14 + .4); o.start(t + i * .14); o.stop(t + i * .14 + .4); }); } catch (e) { }
+    }
+    function sndTimerAlert() {
+      if (!S.settings.sound) return;
+      try { const ac = getAC(), t = ac.currentTime;[880, 880, 1100].forEach((f, i) => { const o = ac.createOscillator(), g = ac.createGain(); o.connect(g); g.connect(ac.destination); o.frequency.value = f; o.type = 'square'; g.gain.setValueAtTime(0, t + i * .28); g.gain.linearRampToValueAtTime(.18, t + i * .28 + .04); g.gain.exponentialRampToValueAtTime(.001, t + i * .28 + .22); o.start(t + i * .28); o.stop(t + i * .28 + .24); }); } catch (e) { }
+    }
+
+    /* ════ BG MUSIC ════ */
+    function toggleBgMusic() {
+      sndClick();
+      S.settings.bgMusic = !S.settings.bgMusic;
+      setSw('sw-bgmusic', S.settings.bgMusic);
+      const m = document.getElementById('bgMusic');
+      if (S.settings.bgMusic) { m.volume = 0.18; m.play().catch(() => { }); }
+      else m.pause();
+    }
+    function applyBgMusic() {
+      const m = document.getElementById('bgMusic');
+      if (S.settings.bgMusic) { m.volume = 0.18; m.play().catch(() => { }); }
+      else m.pause();
+    }
+
+    /* ════ TOAST ════ */
+    function toast(msg, d = 2100) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), d); }
+
+    /* ════ LANGUAGE ════ */
+    function tr(fa, en) { return S.settings.lang === 'en' ? en : fa; }
+    function applyLang() {
+      const lang = S.settings.lang;
+      const isEn = lang === 'en';
+      document.documentElement.setAttribute('lang', isEn ? 'en' : 'fa');
+      document.documentElement.setAttribute('dir', isEn ? 'ltr' : 'rtl');
+      document.documentElement.setAttribute('data-lang', lang);
+      /* Update all data-fa / data-en elements */
+      document.querySelectorAll('[data-fa]').forEach(el => {
+        if (el.tagName === 'INPUT') {
+          const ph = isEn ? el.getAttribute('data-en-placeholder') : el.getAttribute('data-fa-placeholder');
+          if (ph) el.placeholder = ph;
+        } else {
+          el.textContent = isEn ? el.getAttribute('data-en') : el.getAttribute('data-fa');
+        }
+      });
+      /* lang toggle button */
+      const lb = document.getElementById('langToggleBtn');
+      if (lb) lb.textContent = isEn ? 'فارسی' : 'English';
+      const lml = document.getElementById('langMenuLabel');
+      if (lml) lml.textContent = isEn ? 'فارسی' : 'English';
+      const lms = document.getElementById('langMenuSub');
+      if (lms) lms.textContent = isEn ? 'Switch to Persian' : 'Switch to English';
+      const lsl = document.getElementById('langSubLabel');
+      if (lsl) lsl.textContent = isEn ? 'English / فارسی' : 'فارسی / English';
+      /* re-render chip counter */
+      const pc = document.getElementById('pCount');
+      if (pc && S.players.length) pc.textContent = isEn ? `Players ${S.players.length}` : `بازیکنان ${S.players.length}`;
+    }
+    function toggleLang() {
+      sndClick();
+      S.settings.lang = S.settings.lang === 'fa' ? 'en' : 'fa';
+      applyLang();
+      if (document.getElementById('catalogOverlay').classList.contains('vis')) renderCatalog();
+    }
+
+    /* ════ THEME ════ */
+    function applyTheme() {
+      const isDark = S.settings.theme === 'dark';
+      document.documentElement.setAttribute('data-theme', S.settings.theme);
+      setSw('sw-theme', !isDark);/* light mode = switch ON */
+      const ti = document.getElementById('themeMenuIcon');
+      if (ti) ti.textContent = isDark ? '☀️' : '🌙';
+      const tml = document.getElementById('themeMenuLabel');
+      if (tml) {
+        const faKey = isDark ? 'data-fa-dark' : 'data-fa-light';
+        const enKey = isDark ? 'data-en-dark' : 'data-en-light';
+        tml.textContent = S.settings.lang === 'en' ? tml.getAttribute(enKey) : tml.getAttribute(faKey);
+      }
+      const tsl = document.getElementById('themeSubLabel');
+      if (tsl) {
+        const fak = isDark ? 'data-fa-dark' : 'data-fa-light';
+        const enk = isDark ? 'data-en-dark' : 'data-en-light';
+        tsl.textContent = S.settings.lang === 'en' ? tsl.getAttribute(enk) : tsl.getAttribute(fak);
+      }
+    }
+    function toggleTheme() {
+      sndClick();
+      S.settings.theme = S.settings.theme === 'dark' ? 'light' : 'dark';
+      applyTheme();
+    }
+
+    /* ════ SCREENS ════ */
+    function goScreen(id) {
+      sndClick();
+      S.prevScreen = document.querySelector('.screen.active')?.id || 's-home';
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo(0, 0);
+      if (id === 's-settings') renderSettings();
+      if (id === 's-editor') renderCardEditor();
+    }
+    function goBack() { sndClick(); goScreen(S.prevScreen); }
+
+    /* ════ HAMBURGER MENU ════ */
+    function openMenu() { sndClick(); document.getElementById('menuDrawer').classList.add('vis'); document.getElementById('menuOverlay').classList.add('vis'); }
+    function closeMenu() { document.getElementById('menuDrawer').classList.remove('vis'); document.getElementById('menuOverlay').classList.remove('vis'); }
+
+    /* ════ CATALOG ════ */
+    function openCatalog() { sndClick(); renderCatalog(); document.getElementById('catalogOverlay').classList.add('vis'); }
+    function closeCatalog() { sndClick(); document.getElementById('catalogOverlay').classList.remove('vis'); }
+    function renderCatalog() {
+      const isEn = S.settings.lang === 'en';
+      const groups = [
+        { key: 'mafia', labelFa: 'مافیا', labelEn: 'Mafia', cls: 'ct-mafia' },
+        { key: 'citizen', labelFa: 'شهروند', labelEn: 'Citizen', cls: 'ct-citizen' },
+        { key: 'indie', labelFa: 'مستقل', labelEn: 'Independent', cls: 'ct-indie' },
+      ];
+      const tcFa = { mafia: 'مافیا', citizen: 'شهروند', indie: 'مستقل' };
+      const tcEn = { mafia: 'Mafia', citizen: 'Citizen', indie: 'Independent' };
+      const tColor = { mafia: 'var(--red)', citizen: 'var(--green)', indie: 'var(--orange)' };
+      const tBg = { mafia: 'rgba(230,57,80,.15)', citizen: 'rgba(52,199,118,.12)', indie: 'rgba(240,147,43,.12)' };
+      let html = '';
+      groups.forEach(g => {
+        const roles = ROLES.filter(r => r.team === g.key);
+        html += `<div class="catalog-group-title ${g.cls}">${isEn ? g.labelEn : g.labelFa}</div>`;
+        roles.forEach(r => {
+          const name = isEn ? r.nameEn : r.name;
+          const desc = isEn ? r.descEn : r.desc;
+          const teamLabel = isEn ? tcEn[r.team] : tcFa[r.team];
+          html += `
+      <div class="catalog-role-item" id="cat_${r.id}" onclick="toggleCatalogItem('${r.id}')">
+        <div class="catalog-role-header">
+          <div class="catalog-role-emoji">${r.img ? `<img src="${r.img}" style="width:28px;height:28px;object-fit:cover;border-radius:6px;">` : r.emoji}</div>
+          <div class="catalog-role-name">${name}</div>
+          <span class="catalog-role-team" style="background:${tBg[r.team]};color:${tColor[r.team]}">${teamLabel}</span>
+          <div class="catalog-role-arrow">▼</div>
+        </div>
+        <div class="catalog-role-desc">${desc}</div>
+      </div>`;
+        });
+      });
+      document.getElementById('catalogBody').innerHTML = html;
+    }
+    function toggleCatalogItem(id) {
+      sndClick();
+      document.getElementById('cat_' + id).classList.toggle('open-item');
+    }
+
+    /* ════ PLAYERS ════ */
+    function addPlayer() {
+      sndSelect();
+      const inp = document.getElementById('pInput');
+      const name = inp.value.trim();
+      if (!name) { toast(tr('نام بازیکن را وارد کنید', 'Enter player name')); return; }
+      if (S.players.includes(name)) { toast(tr('این نام قبلاً اضافه شده', 'Name already added')); return; }
+      if (S.players.length >= 20) { toast(tr('حداکثر ۲۰ بازیکن', 'Maximum 20 players')); return; }
+      S.players.push(name); inp.value = '';
+      persistPlayers(); renderChips();
+    }
+    function removePlayer(i) { sndClick(); S.players.splice(i, 1); persistPlayers(); renderChips(); }
+    function renderChips() {
+      const c = document.getElementById('playerChips');
+      const cnt = document.getElementById('pCount');
+      const isEn = S.settings.lang === 'en';
+      if (!S.players.length) {
+        c.innerHTML = `<span class="p-empty">${isEn ? 'No players added yet 👥' : 'هنوز کسی اضافه نشده 👥'}</span>`;
+        cnt.textContent = ''; return;
+      }
+      c.innerHTML = S.players.map((n, i) => `<div class="p-chip">${n}<span class="chip-del" onclick="removePlayer(${i})">✕</span></div>`).join('');
+      cnt.textContent = isEn ? `Players ${S.players.length}` : `بازیکنان ${S.players.length}`;
+    }
+
+    /* ════ MY LIST ════ */
+    let mylistOpen = false;
+    function toggleMyList() { sndClick(); mylistOpen = !mylistOpen; document.getElementById('mylistBody').classList.toggle('open', mylistOpen); document.getElementById('mylistArrow').classList.toggle('open', mylistOpen); if (mylistOpen) renderSaved(); }
+    function savePerson() {
+      sndSelect();
+      const inp = document.getElementById('savedInput');
+      const name = inp.value.trim();
+      if (!name) { toast(tr('نام را وارد کنید', 'Enter a name')); return; }
+      if (S.saved.includes(name)) { toast(tr('قبلاً ذخیره شده', 'Already saved')); return; }
+      S.saved.push(name); inp.value = ''; persistSaved(); renderSaved(); toast(tr('✅ ذخیره شد', '✅ Saved'));
+    }
+    function renderSaved() {
+      const c = document.getElementById('savedList');
+      if (!S.saved.length) { c.innerHTML = `<div style="padding:11px 14px;font-size:.77rem;color:var(--txt3);">${t('لیست خالی است', 'List is empty')}</div>`; return; }
+      c.innerHTML = S.saved.map((n, i) => `
+    <div class="saved-row" id="sr_${i}" onclick="toggleSaved(${i})">
+      <div class="s-check" id="sc_${i}"></div>
+      <div class="saved-row-name">${n}</div>
+      <button class="saved-del" onclick="event.stopPropagation();deleteSaved(${i})">🗑</button>
+    </div>`).join('');
+    }
+    const savedSel = new Set();
+    function toggleSaved(i) { sndClick(); if (savedSel.has(i)) savedSel.delete(i); else savedSel.add(i); document.getElementById('sr_' + i).classList.toggle('sel', savedSel.has(i)); document.getElementById('sc_' + i).textContent = savedSel.has(i) ? '✓' : ''; }
+    function selectAllSaved() { sndClick(); S.saved.forEach((_, i) => { if (!savedSel.has(i)) toggleSaved(i); }); }
+    function deselectAllSaved() { sndClick();[...savedSel].forEach(i => toggleSaved(i)); }
+    function addFromSaved() {
+      sndSelect(); let added = 0;
+      savedSel.forEach(i => { const n = S.saved[i]; if (n && !S.players.includes(n) && S.players.length < 20) { S.players.push(n); added++; } });
+      if (!added) { toast(tr('هیچ‌کدام انتخاب نشده', 'None selected')); return; }
+      persistPlayers(); renderChips(); toast(tr(`✅ ${added} نفر اضافه شدند`, `✅ ${added} players added`));
+    }
+    function deleteSaved(i) { sndClick(); savedSel.delete(i); S.saved.splice(i, 1); persistSaved(); renderSaved(); }
+    function persistSaved() { try { localStorage.setItem('mfSaved', JSON.stringify(S.saved)); } catch (e) { } }
+    function loadSaved() { try { const d = localStorage.getItem('mfSaved'); if (d) S.saved = JSON.parse(d); } catch (e) { } }
+    function persistPlayers() { try { localStorage.setItem('mfPlayers', JSON.stringify(S.players)); } catch (e) { } }
+    function loadPlayers() { try { const d = localStorage.getItem('mfPlayers'); if (d) S.players = JSON.parse(d); } catch (e) { } }
+
+    /* ════ CARD EDITOR ════ */
+    function goCardEditor() {
+      sndClick();
+      if (S.players.length < 4) { toast(tr('ابتدا بازیکنان را اضافه کنید', 'Add players first')); return; }
+      S.cardCounts = defaultCounts(); /* فقط یک بار هنگام باز شدن صفحه */
+      goScreen('s-editor');
+    }
+    function renderCardEditor() {
+      const n = S.players.length;
+      /* S.cardCounts is initialized in goCardEditor - do NOT reset here */
+      const total = Object.values(S.cardCounts).reduce((a, b) => a + b, 0);
+      const isEn = S.settings.lang === 'en';
+      const atMax = total >= n;
+      const tcolor = { mafia: 'var(--red)', citizen: 'var(--green)', indie: 'var(--orange)' };
+      const tname = { mafia: isEn ? 'Mafia' : 'مافیا', citizen: isEn ? 'Citizen' : 'شهروند', indie: isEn ? 'Independent' : 'مستقل' };
+      document.getElementById('ceTotalLabel').innerHTML =
+        `${isEn ? 'Cards' : 'کارت‌ها'}: <strong style="color:${total === n ? 'var(--green)' : total > n ? 'var(--red)' : 'var(--gold)'}">${total}</strong> / ${isEn ? 'Players' : 'بازیکنان'}: <strong>${n}</strong>`;
+      const groups = [
+        { key: 'mafia', label: isEn ? 'Mafia' : 'مافیا', cls: 'mafia-title', icon: '🔴' },
+        { key: 'citizen', label: isEn ? 'Citizen' : 'شهروند', cls: 'citizen-title', icon: '🟢' },
+        { key: 'indie', label: isEn ? 'Independent' : 'مستقل', cls: 'indie-title', icon: '🟡' },
+      ];
+      let html = '';
+      groups.forEach(g => {
+        html += `<div class="ce-group-title ${g.cls}">${g.icon} ${g.label}</div>`;
+        ROLES.filter(r => r.team === g.key).forEach(r => {
+          const cnt = S.cardCounts[r.id] || 0;
+          const canInc = total < n;
+          const imgHtml = r.img
+            ? `<img class="ce-img" src="${r.img}" style="display:block;" alt="${r.nameEn}">`
+            : `<div class="ce-emoji">${r.emoji}</div>`;
+          /* ↑↑↑ برای جایگزینی PNG: مقدار r.img را در آرایه ROLES تنظیم کنید ↑↑↑ */
+          html += `
+      <div class="ce-item ${cnt > 0 ? 'active-role' : ''}">
+        ${imgHtml}
+        <div class="ce-info">
+          <div class="ce-name">${isEn ? r.nameEn : r.name}</div>
+          <div class="ce-desc">${isEn ? r.descEn : r.desc}</div>
+        </div>
+        <div class="ce-counter">
+          <div class="ce-btn ${cnt === 0 ? 'disabled-btn' : ''}" onclick="ceChange('${r.id}',-1)">−</div>
+          <div class="ce-count-val" style="color:${cnt > 0 ? tcolor[r.team] : 'var(--txt3)'}">${cnt}</div>
+          <div class="ce-btn inc ${!canInc ? 'disabled-btn' : ''}" onclick="ceChange('${r.id}',1)">+</div>
+        </div>
+      </div>`;
+        });
+      });
+      document.getElementById('ceList').innerHTML = html;
+    }
+    function ceChange(id, delta) {
+      sndClick();
+      const n = S.players.length;
+      const total = Object.values(S.cardCounts).reduce((a, b) => a + b, 0);
+      if (delta > 0 && total >= n) { toast(tr('تعداد کارت‌ها به حداکثر رسید', 'Card limit reached')); return; }
+      S.cardCounts[id] = Math.max(0, (S.cardCounts[id] || 0) + delta);
+      renderCardEditor();
+    }
+    function resetCardEditor() { sndClick(); S.cardCounts = defaultCounts(); renderCardEditor(); }
+    function applyCards() {
+      sndSelect();
+      const n = S.players.length;
+      const total = Object.values(S.cardCounts).reduce((a, b) => a + b, 0);
+      if (total < n) { toast(tr(`کارت‌ها کمتر از بازیکنان (${n})`, `Cards (${total}) fewer than players (${n})`)); return; }
+      if (total > n) { toast(tr(`کارت‌ها بیشتر از بازیکنان (${n})`, `Cards (${total}) more than players (${n})`)); return; }
+      doStartGame(true);
+    }
+
+    /* ════ ROLE POOL ════ */
+    function shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
+    function buildRolePool(useCards) {
+      const n = S.players.length; let pool = [];
+      if (useCards) {
+        ROLES.forEach(r => { const cnt = S.cardCounts[r.id] || 0; for (let i = 0; i < cnt; i++)pool.push(r.id); });
+      } else {
+        const mafN = Math.max(1, Math.floor(n / 3));
+        pool.push('godfather');
+        const mExt = ['mafia', 'lector', 'nato', 'hostage', 'mafiaspy', 'infiltrator', 'poisoner', 'lawyer', 'negotiator', 'mterrorist'];
+        for (let i = 1; i < mafN; i++) pool.push(mExt[(i - 1) % mExt.length]);
+        if (n >= 5) pool.push('doctor'); if (n >= 6) pool.push('detective'); if (n >= 7) pool.push('sniper');
+        if (n >= 8) pool.push('mayor'); if (n >= 9) pool.push('hardman'); if (n >= 10) pool.push('boxer');
+        if (n >= 11) pool.push('interrogator'); if (n >= 12) pool.push('joker'); if (n >= 13) pool.push('terrorist');
+        if (n >= 14) pool.push('hunter'); if (n >= 15) pool.push('mirror'); if (n >= 16) pool.push('informer');
+        if (n >= 17) pool.push('blacksmith'); if (n >= 18) pool.push('zodiac'); if (n >= 19) pool.push('judge');
+        if (n >= 20) pool.push('sherlock');
+        while (pool.length < n) pool.push('citizen');
+      }
+      return shuffle(pool).slice(0, n);
+    }
+
+    /* ════ START GAME ════ */
+    function startGame() { sndSelect(); if (S.players.length < 4) { toast(tr('حداقل ۴ بازیکن نیاز است', 'At least 4 players required')); return; } doStartGame(false); }
+    function doStartGame(useCards) {
+      const n = S.players.length;
+      const pool = buildRolePool(useCards); /* shuffled pool of role ids */
+
+      /* ── چیت: نقش‌های از پیش تعیین‌شده ── */
+      const cheatMap = {};
+      (S.cheats || []).forEach(ch => {
+        if (S.players.includes(ch.name)) cheatMap[ch.name] = ch.roleId;
+      });
+
+      /* shuffle بازیکنان */
+      const shuffledPlayers = shuffle([...S.players]);
+
+      /* حذف نقش‌هایی که به cheat ها اختصاص می‌یابند از pool */
+      const remainingPool = [...pool];
+      Object.values(cheatMap).forEach(rid => {
+        const idx = remainingPool.indexOf(rid);
+        if (idx > -1) remainingPool.splice(idx, 1);
+        else remainingPool.splice(remainingPool.length - 1, 1); /* اگر نبود آخری رو حذف کن */
+      });
+
+      /* assign نهایی */
+      S.assigned = shuffledPlayers.map(name => {
+        if (cheatMap[name]) return { name, roleId: cheatMap[name] };
+        return { name, roleId: remainingPool.shift() || 'citizen' };
+      });
+
+      S.revealed = new Array(n).fill(false);
+      S.eliminated = new Array(n).fill(false);
+      S.scores = { cit: 0, maf: 0, rnd: 1 };
+      swReset();
+      renderGame();
+      /* مستقیم به صفحه بازی برو — بدون صدای کلیک اضافی */
+      S.prevScreen = 's-home';
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('s-game').classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    /* ════ GAME RENDER ════ */
+    function getRoleData(id) { return ROLES.find(r => r.id === id) || ROLES[0]; }
+    const TC = { mafia: 'var(--red)', citizen: 'var(--green)', indie: 'var(--orange)' };
+    const TN_FA = { mafia: 'تیم مافیا', citizen: 'تیم شهروند', indie: 'مستقل' };
+    const TN_EN = { mafia: 'Mafia Team', citizen: 'Citizen Team', indie: 'Independent' };
+    const TB = { mafia: 'rgba(230,57,80,.1)', citizen: 'rgba(52,199,118,.08)', indie: 'rgba(240,147,43,.08)' };
+    function teamName(team) { return S.settings.lang === 'en' ? TN_EN[team] : TN_FA[team]; }
+
+    function renderGame() { updateScores(); const list = document.getElementById('gameList'); list.innerHTML = ''; S.assigned.forEach((_, i) => list.appendChild(buildPlayerCard(i))); checkGodBtn(); }
+    function buildPlayerCard(i) {
+      const p = S.assigned[i]; const role = getRoleData(p.roleId);
+      const elim = S.eliminated[i]; const done = S.revealed[i];
+      const isEn = S.settings.lang === 'en';
+      const wrap = document.createElement('div');
+      wrap.className = 'pli' + (elim ? ' eliminated' : done ? ' done' : ''); wrap.id = 'pli_' + i;
+      const stTxt = done ? (isEn ? '✓ Role seen' : '✓ نقش نشان داده شد') : '';
+      wrap.innerHTML = `
+    <div class="pli-main">
+      <div class="pli-num">${i + 1}</div>
+      <div class="pli-name">${p.name}${elim ? ' 💀' : ''}</div>
+      <div class="pli-status">${stTxt}</div>
+      <button class="pli-reveal-btn" onclick="revealRole(${i})" ${elim || done ? 'disabled' : ''}>
+        ${done ? (isEn ? '✓ Seen' : '✓ دیده شد') : elim ? (isEn ? 'Out' : 'حذف') : (isEn ? '👁 Role' : '👁 نقش')}
+      </button>
+    </div>
+    <div class="pli-actions">
+      ${!elim ? `
+        <button class="act-btn act-elim"   onclick="eliminatePlayer(${i})">💀 ${isEn ? 'Eliminate' : 'حذف'}</button>
+        <button class="act-btn act-elim"   onclick="eliminatePlayer(${i})">🔫 ${isEn ? 'Eliminate' : 'مافیا شات زد'}</button>
+      `: `
+        <button class="act-btn act-revive" onclick="revivePlayer(${i})">✨ ${isEn ? 'Revive' : 'احیا'}</button>
+        <button class="act-btn act-revive" onclick="revivePlayer(${i})">🩺 ${isEn ? 'Revive' : 'دکتر نجات داد'}</button>
+      `}
+    </div>`;
+      return wrap;
+    }
+    function refreshCard(i) { const old = document.getElementById('pli_' + i); if (old) old.replaceWith(buildPlayerCard(i)); }
+    function updateScores() { document.getElementById('sc-cit').textContent = S.scores.cit; document.getElementById('sc-rnd').textContent = S.scores.rnd; document.getElementById('sc-maf').textContent = S.scores.maf; }
+
+    /* ════ REVEAL ROLE ════ */
+    function revealRole(i) {
+      if (S.revealed[i] || S.eliminated[i]) return;
+      sndReveal(); S.revealIdx = i;
+      const p = S.assigned[i]; const role = getRoleData(p.roleId);
+      const isEn = S.settings.lang === 'en';
+      /* ── Per-role card background class ── */
+      const card = document.getElementById('roleCardEl');
+      card.className = 'role-card ' + (role.cardBg || '');
+      document.getElementById('rcPlayer').textContent = p.name;
+      /* ── Emoji or PNG ── */
+      const emojiEl = document.getElementById('rcEmoji');
+      if (role.img) {
+        emojiEl.innerHTML = `<img src="${role.img}" style="width:64px;height:64px;object-fit:contain;border-radius:12px;">`;
+      } else {
+        emojiEl.innerHTML = role.emoji;
+      }
+      /* ── name / team ── */
+      document.getElementById('rcName').textContent = isEn ? role.nameEn : role.name;
+      document.getElementById('rcName').style.color = TC[role.team];
+      const teamEl = document.getElementById('rcTeam');
+      teamEl.textContent = S.settings.showTeam ? teamName(role.team) : '';
+      teamEl.style.display = S.settings.showTeam ? 'inline-block' : 'none';
+      teamEl.style.background = TB[role.team]; teamEl.style.color = TC[role.team];
+      document.getElementById('rcDesc').textContent = isEn ? role.descEn : role.desc;
+      document.getElementById('rcTimerBar').style.background = TC[role.team];
+      document.getElementById('roHint').textContent = isEn ? 'Tap to close' : 'برای بستن لمس کنید';
+      document.getElementById('roleOverlay').classList.add('vis');
+      /* Timer */
+      const dur = S.settings.revealTime;
+      const bar = document.getElementById('rcTimerBar');
+      const cntEl = document.getElementById('rcCountdown');
+      bar.style.transition = 'none'; bar.style.width = '100%';
+      requestAnimationFrame(() => { bar.style.transition = `width ${dur}s linear`; bar.style.width = '0%'; });
+      cntEl.textContent = isEn ? `Hiding in ${dur}` : `نقش پنهان می‌شود ${dur}`;
+      if (S.revealIv) clearInterval(S.revealIv);
+      let rem = dur;
+      S.revealIv = setInterval(() => {
+        rem--;
+        cntEl.textContent = rem > 0 ? (isEn ? `Hiding in ${rem}` : `نقش پنهان می‌شود ${rem}`) : '';
+        if (rem <= 0) { clearInterval(S.revealIv); S.revealIv = null; closeRoleCard(); }
+      }, 1000);
+    }
+    function closeRoleCard() {
+      if (S.revealIv) { clearInterval(S.revealIv); S.revealIv = null; }
+      document.getElementById('roleOverlay').classList.remove('vis');
+      const i = S.revealIdx;
+      if (i !== null && i !== undefined && !S.revealed[i]) { S.revealed[i] = true; refreshCard(i); checkGodBtn(); }
+      S.revealIdx = null;
+    }
+    function checkGodBtn() { document.getElementById('godBtnWrap').style.display = S.revealed.every(Boolean) ? 'block' : 'none'; }
+
+    /* ════ GOD VIEW ════ */
+    function showGodView() {
+      sndReveal();
+      const isEn = S.settings.lang === 'en';
+      document.getElementById('godGrid').innerHTML = S.assigned.map((p, i) => {
+        const role = getRoleData(p.roleId); const elim = S.eliminated[i];
+        const imgHtml = role.img ? `<img src="${role.img}" style="width:32px;height:32px;object-fit:contain;border-radius:7px;">` : role.emoji;
+        return `<div class="god-cell" style="border-color:${TC[role.team]}44;${elim ? 'opacity:.4' : ''}">
+      <div class="god-cell-emoji">${imgHtml}</div>
+      <div class="god-cell-player">${p.name}${elim ? ' 💀' : ''}</div>
+      <div class="god-cell-role" style="color:${TC[role.team]}">${isEn ? role.nameEn : role.name}</div>
+      <div class="god-cell-team" style="color:${TC[role.team]}99">${teamName(role.team)}</div>
+    </div>`;
+      }).join('');
+      document.getElementById('godOverlay').classList.add('vis');
+    }
+    function hideGodView() { sndClick(); document.getElementById('godOverlay').classList.remove('vis'); }
+
+    /* ════ ACTIONS ════ */
+    function logAction(i, label) { beep(500, .08, 'sine', .18); toast(`${S.assigned[i].name}: ${label}`); }
+    function eliminatePlayer(i) {
+      sndElim(); if (S.eliminated[i]) { toast(tr('قبلاً حذف شده', 'Already eliminated')); return; }
+      if (S.settings.challenge) {
+        S.pendingElim = i;
+        const ch = CHALLENGES[Math.floor(Math.random() * CHALLENGES.length)];
+        const isEn = S.settings.lang === 'en';
+        document.getElementById('chIcon').textContent = ch.icon;
+        document.getElementById('chTitle').textContent = isEn ? ch.en : ch.fa;
+        document.getElementById('chDesc').textContent = isEn ? ch.descEn : ch.descFa;
+        document.getElementById('challengePopup').classList.add('vis');
+      } else { doElim(i); }
+    }
+    function doElim(i) {
+      S.eliminated[i] = true; const role = getRoleData(S.assigned[i].roleId);
+      if (role.team === 'mafia') S.scores.cit++; else S.scores.maf++;
+      updateScores(); refreshCard(i);
+      toast(tr(`💀 ${S.assigned[i].name} حذف شد`, `💀 ${S.assigned[i].name} eliminated`));
+    }
+    function revivePlayer(i) { beep(650, .12, 'sine', .2); S.eliminated[i] = false; refreshCard(i); toast(tr(`✨ ${S.assigned[i].name} احیا شد`, `✨ ${S.assigned[i].name} revived`)); }
+    function closeChallenge() { sndClick(); document.getElementById('challengePopup').classList.remove('vis'); if (S.pendingElim !== null) { doElim(S.pendingElim); S.pendingElim = null; } }
+    function nextRound() { sndSelect(); S.scores.rnd++; updateScores(); toast(tr(`⏭ دور ${S.scores.rnd} شروع شد`, `⏭ Round ${S.scores.rnd} started`)); }
+
+    /* ════ WINNER ════ */
+    function showWinner(team) {
+      sndWin();
+      const isEn = S.settings.lang === 'en';
+      const icons = { citizen: '🏙️', mafia: '🌑', indie: '🃏' };
+      const titles = { citizen: isEn ? 'Citizens Win!' : 'شهروندان بردند!', mafia: isEn ? 'Mafia Wins!' : 'مافیا برنده شد!', indie: isEn ? 'Independent Wins!' : 'مستقل برنده شد!' };
+      const subs = { citizen: isEn ? 'Mafia has been eliminated from the city' : 'مافیا از شهر ریشه‌کن شد', mafia: isEn ? 'The city has fallen to darkness' : 'شهر به تاریکی فرو رفت', indie: isEn ? 'The independent role wins' : 'نقش مستقل برنده شد' };
+      document.getElementById('winIcon').textContent = icons[team] || '🏆';
+      document.getElementById('winTitle').textContent = titles[team] || tr('برنده!', 'Winner!');
+      document.getElementById('winTitle').style.color = TC[team] || 'var(--gold)';
+      document.getElementById('winSub').textContent = subs[team] || '';
+      document.getElementById('winnerPopup').classList.add('vis');
+    }
+    function closeWinner() { sndClick(); document.getElementById('winnerPopup').classList.remove('vis'); }
+    function newGame() { sndClick(); closeWinner(); goScreen('s-home'); }
+
+    /* ════ CONFIRM ════ */
+    function confirmRestart() { sndClick(); document.getElementById('confirmModal').classList.add('vis'); }
+    function closeConfirm() { sndClick(); document.getElementById('confirmModal').classList.remove('vis'); }
+    function doRestart() { sndClick(); closeConfirm(); S.scores = { cit: 0, maf: 0, rnd: 1 }; goScreen('s-home'); }
+
+    /* ════ STOPWATCH ════ */
+    function swToggle() {
+      sndClick();
+      if (S.sw.running) { clearInterval(S.sw.iv); S.sw.running = false; document.getElementById('swBtn').textContent = '▶'; }
+      else {
+        S.sw.iv = setInterval(() => {
+          S.sw.sec++;
+          const m = String(Math.floor(S.sw.sec / 60)).padStart(2, '0');
+          const s = String(S.sw.sec % 60).padStart(2, '0');
+          document.getElementById('swDisp').textContent = m + ':' + s;
+          if (S.sw.sec > 0 && S.sw.sec % 60 === 0) sndTimerAlert();
+        }, 1000);
+        S.sw.running = true; document.getElementById('swBtn').textContent = '⏸';
+      }
+    }
+    function swReset() { sndClick(); clearInterval(S.sw.iv); S.sw.running = false; S.sw.sec = 0; document.getElementById('swDisp').textContent = '00:00'; document.getElementById('swBtn').textContent = '▶'; }
+
+    /* ════ SETTINGS ════ */
+    function renderSettings() {
+      setSw('sw-sound', S.settings.sound); setSw('sw-rolesound', S.settings.roleSound);
+      setSw('sw-challenge', S.settings.challenge); setSw('sw-team', S.settings.showTeam);
+      setSw('sw-bgmusic', S.settings.bgMusic);
+      applyTheme();
+      document.getElementById('nv-revealTime').textContent = S.settings.revealTime;
+      const isEn = S.settings.lang === 'en';
+      document.getElementById('scenList').innerHTML = SCENARIOS.map(sc => `
+    <div class="sc-card ${S.selScenario === sc.id ? 'sel' : ''}" onclick="selScen('${sc.id}')">
+      <div class="sc-name">${isEn ? sc.en : sc.fa}</div>
+      <div class="sc-desc">${isEn ? sc.descEn : sc.descFa}</div>
+      <div class="sc-tags">${sc.tags.map(tg => `<span class="sc-tag">${tg}</span>`).join('')}</div>
+    </div>`).join('');
+      renderCheatSection();
+    }
+
+    /* ════ CHEATS ════ */
+    function renderCheatSection() {
+      /* پر کردن dropdown نقش‌ها (فقط یک بار) */
+      const sel = document.getElementById('cheatRole');
+      if (sel && sel.options.length <= 1) {
+        ROLES.forEach(r => {
+          const opt = document.createElement('option');
+          opt.value = r.id;
+          opt.textContent = r.emoji + ' ' + r.name;
+          sel.appendChild(opt);
+        });
+      }
+      /* نمایش لیست cheats */
+      const list = document.getElementById('cheatList');
+      if (!list) return;
+      if (!(S.cheats || []).length) {
+        list.innerHTML = '<div style="font-size:.75rem;color:var(--txt3);padding:4px 2px 6px;">هیچ نقش اجباری‌ای تنظیم نشده</div>';
+        return;
+      }
+      list.innerHTML = S.cheats.map((ch, i) => {
+        const role = ROLES.find(r => r.id === ch.roleId);
+        const tcolor = { mafia: 'var(--red)', citizen: 'var(--green)', indie: 'var(--orange)' };
+        const col = role ? tcolor[role.team] : 'var(--txt2)';
+        return `<div class="stg-row" style="margin-bottom:6px;padding:9px 12px;">
+      <span style="font-size:.85rem;font-weight:700;flex:1;">${ch.name}</span>
+      <span style="font-size:.82rem;color:${col};font-weight:600;margin:0 8px;">${role ? role.emoji + ' ' + role.name : '?'}</span>
+      <button onclick="removeCheat(${i})" style="background:rgba(230,57,80,.1);color:var(--red);border:1px solid rgba(230,57,80,.3);padding:4px 9px;border-radius:6px;font-size:.7rem;cursor:pointer;font-family:Vazirmatn,sans-serif;font-weight:700;">✕</button>
+    </div>`;
+      }).join('');
+    }
+    function addCheat() {
+      sndSelect();
+      const name = document.getElementById('cheatName').value.trim();
+      const roleId = document.getElementById('cheatRole').value;
+      if (!name) { toast('نام بازیکن را وارد کنید'); return; }
+      if (!roleId) { toast('نقش را انتخاب کنید'); return; }
+      if (!S.cheats) S.cheats = [];
+      if (S.cheats.find(c => c.name === name)) { toast('این اسم قبلاً تنظیم شده'); return; }
+      S.cheats.push({ name, roleId });
+      document.getElementById('cheatName').value = '';
+      document.getElementById('cheatRole').value = '';
+      renderCheatSection();
+      const role = ROLES.find(r => r.id === roleId);
+      toast('✅ ' + name + ' ← ' + (role ? role.name : ''));
+    }
+    function removeCheat(i) {
+      sndClick();
+      if (!S.cheats) return;
+      S.cheats.splice(i, 1);
+      renderCheatSection();
+    }
+    function setSw(id, on) { const el = document.getElementById(id); if (el) { if (on) el.classList.add('on'); else el.classList.remove('on'); } }
+    function toggleSw(id, key) { sndClick(); S.settings[key] = !S.settings[key]; setSw(id, S.settings[key]); }
+    function changeN(key, d) { sndClick(); const limits = { revealTime: [3, 20] }; const [mn, mx] = limits[key] || [1, 99]; S.settings[key] = Math.max(mn, Math.min(mx, S.settings[key] + d)); document.getElementById('nv-' + key).textContent = S.settings[key]; }
+    function selScen(id) { sndClick(); S.selScenario = S.selScenario === id ? null : id; renderSettings(); }
+    function saveSettings() {
+      sndSelect();
+      try { localStorage.setItem('mfSettings', JSON.stringify({ settings: S.settings, scenario: S.selScenario })); } catch (e) { }
+      applyLang(); applyTheme(); applyBgMusic();
+      toast(tr('✅ تنظیمات ذخیره شد', '✅ Settings saved')); goBack();
+    }
+    function loadSettings() {
+      try { const d = localStorage.getItem('mfSettings'); if (d) { const p = JSON.parse(d); if (p.settings) Object.assign(S.settings, p.settings); if (p.scenario) S.selScenario = p.scenario; } } catch (e) { }
+    }
+
+    /* ════ INIT ════ */
+    function init() {
+      loadSaved(); loadSettings(); loadPlayers();
+      applyTheme(); applyLang(); applyBgMusic();
+      renderChips();
+    }
+    init();
+  </script>
+</body>
+
+</html>
