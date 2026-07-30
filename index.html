@@ -1867,6 +1867,373 @@
       display: flex;
       justify-content: center;
     }
+
+    /* ═══════════════════════════════════════════════════════════════
+       GOD ASSISTANT MODULE — team counts, day/night cycle,
+       night assistant, player management, game log
+       ═══════════════════════════════════════════════════════════════ */
+
+    /* ── team alive-counts row ── */
+    .team-row {
+      display: flex;
+      gap: 7px;
+      margin-bottom: 10px;
+    }
+
+    .team-cell {
+      flex: 1;
+      background: var(--bg2);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r2);
+      padding: 8px 6px;
+      text-align: center;
+    }
+
+    .team-cell-label {
+      font-size: .6rem;
+      color: var(--txt3);
+      margin-bottom: 2px;
+    }
+
+    .team-cell-val {
+      font-size: 1.15rem;
+      font-weight: 900;
+    }
+
+    /* ── day / night cycle pill ── */
+    .cycle-pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--bg2);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r2);
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      font-weight: 800;
+      font-size: .86rem;
+      transition: var(--tr);
+    }
+
+    .cycle-pill.is-night {
+      color: var(--gold);
+      border-color: rgba(201, 168, 76, .3);
+      background: var(--gold2);
+    }
+
+    .cycle-pill.is-day {
+      color: var(--orange);
+      border-color: rgba(240, 147, 43, .3);
+      background: var(--orange2);
+    }
+
+    /* ── role badge + status tag (management cards) ── */
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: .68rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    .status-tag {
+      font-size: .64rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .status-alive {
+      background: var(--green2);
+      color: var(--green);
+    }
+
+    .status-dead {
+      background: rgba(230, 57, 80, .1);
+      color: var(--red);
+    }
+
+    /* ── night assistant: progress chips ── */
+    .night-progress {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 2px 2px 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .night-chip {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      width: 58px;
+      padding: 8px 4px;
+      border-radius: var(--r2);
+      border: 1.5px solid var(--line);
+      background: var(--bg2);
+      cursor: pointer;
+      transition: var(--tr);
+      opacity: .5;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .night-chip .nc-emoji {
+      font-size: 1.05rem;
+    }
+
+    .night-chip .nc-label {
+      font-size: .56rem;
+      color: var(--txt2);
+      text-align: center;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 54px;
+    }
+
+    .night-chip.current {
+      opacity: 1;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px var(--gold-glow);
+      background: var(--gold2);
+    }
+
+    .night-chip.step-done {
+      opacity: 1;
+      border-color: rgba(52, 199, 118, .4);
+      background: var(--green2);
+    }
+
+    /* ── night assistant: step detail card ── */
+    .night-card {
+      background: var(--bg2);
+      border: 1.5px solid var(--line2);
+      border-radius: var(--r);
+      padding: 18px 16px;
+      margin-bottom: 12px;
+      animation: cardIn .3s cubic-bezier(.22, .68, 0, 1.2) forwards;
+    }
+
+    .night-card-head {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-bottom: 12px;
+    }
+
+    .night-card-emoji {
+      font-size: 1.6rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .night-card-name {
+      font-size: 1.02rem;
+      font-weight: 900;
+    }
+
+    .night-card-team {
+      font-size: .7rem;
+      font-weight: 700;
+      margin-top: 1px;
+    }
+
+    .night-card-desc {
+      font-size: .78rem;
+      color: var(--txt2);
+      line-height: 1.6;
+      background: var(--bg3);
+      border-radius: var(--r2);
+      padding: 10px 12px;
+      margin-bottom: 13px;
+    }
+
+    .night-card-prompt {
+      font-size: .82rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--txt);
+    }
+
+    .night-flag {
+      display: inline-block;
+      font-size: .66rem;
+      font-weight: 700;
+      color: var(--gold);
+      background: var(--gold2);
+      border-radius: 6px;
+      padding: 3px 8px;
+      margin-bottom: 10px;
+    }
+
+    .target-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 4px;
+    }
+
+    .target-btn {
+      padding: 8px 14px;
+      border-radius: 30px;
+      background: var(--bg3);
+      border: 1.5px solid var(--line2);
+      color: var(--txt);
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: .8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--tr);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .target-btn.sel {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    .target-empty {
+      font-size: .78rem;
+      color: var(--txt3);
+      padding: 6px 2px;
+    }
+
+    .night-hint {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: .84rem;
+      font-weight: 700;
+      padding: 10px 12px;
+      border-radius: var(--r2);
+      margin: 12px 0 2px;
+    }
+
+    .night-hint.hint-mafia {
+      background: rgba(230, 57, 80, .12);
+      color: var(--red);
+    }
+
+    .night-hint.hint-clear {
+      background: var(--green2);
+      color: var(--green);
+    }
+
+    .night-step-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .night-result-box {
+      text-align: center;
+      padding: 26px 16px;
+    }
+
+    .night-result-icon {
+      font-size: 2.6rem;
+      margin-bottom: 10px;
+    }
+
+    .night-result-title {
+      font-size: 1.15rem;
+      font-weight: 900;
+      margin-bottom: 7px;
+    }
+
+    .night-result-sub {
+      font-size: .82rem;
+      color: var(--txt2);
+      line-height: 1.6;
+    }
+
+    .night-empty-box {
+      text-align: center;
+      padding: 30px 16px;
+    }
+
+    /* ── game log overlay ── */
+    #logOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 260;
+      background: rgba(5, 5, 8, .98);
+      display: none;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #logOverlay.vis {
+      display: block;
+    }
+
+    .log-body {
+      padding: 14px 18px 32px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .log-empty {
+      text-align: center;
+      color: var(--txt3);
+      font-size: .82rem;
+      padding: 50px 20px;
+    }
+
+    .log-entry {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+
+    .log-tag {
+      flex-shrink: 0;
+      font-size: .62rem;
+      font-weight: 800;
+      color: var(--gold);
+      background: var(--gold2);
+      border-radius: 6px;
+      padding: 4px 7px;
+      white-space: nowrap;
+    }
+
+    .log-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .log-text {
+      font-size: .82rem;
+      line-height: 1.55;
+      color: var(--txt);
+    }
+
+    .log-time {
+      font-size: .6rem;
+      color: var(--txt3);
+      margin-top: 3px;
+    }
   </style>
 </head>
 
@@ -2067,9 +2434,60 @@
       </div>
     </div>
     <div class="player-list-reveal" id="gameList"></div>
-    <div id="godBtnWrap" style="display:none;padding:0 18px 12px;">
-      <button class="btn btn-gold btn-full" onclick="showGodView()" data-fa="👁 نمایش همه نقش‌ها (گاد)"
-        data-en="👁 Show All Roles (God)">👁 نمایش همه نقش‌ها (گاد)</button>
+    <div id="godBtnWrap" style="display:none;padding:0 18px 14px;">
+      <div class="team-row">
+        <div class="team-cell">
+          <div class="team-cell-label" data-fa="شهروند زنده" data-en="Citizens alive">شهروند زنده</div>
+          <div class="team-cell-val" id="teamCitVal" style="color:var(--green)">0</div>
+        </div>
+        <div class="team-cell">
+          <div class="team-cell-label" data-fa="مافیای زنده" data-en="Mafia alive">مافیای زنده</div>
+          <div class="team-cell-val" id="teamMafVal" style="color:var(--red)">0</div>
+        </div>
+        <div class="team-cell">
+          <div class="team-cell-label" data-fa="مستقل زنده" data-en="Independent alive">مستقل زنده</div>
+          <div class="team-cell-val" id="teamIndVal" style="color:var(--orange)">0</div>
+        </div>
+      </div>
+      <div class="cycle-pill is-night" id="cyclePill">🌙 شب ۱</div>
+      <button class="btn btn-gold btn-full" id="cycleActionBtn" onclick="primaryCycleAction()"
+        style="margin-bottom:8px;">🌙 شروع دستیار شب</button>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline btn-sm" style="flex:1;" onclick="showGodView()">👁
+          <span data-fa="نقش‌ها" data-en="Roles">نقش‌ها</span></button>
+        <button class="btn btn-outline btn-sm" style="flex:1;" onclick="openLog()">📜
+          <span data-fa="گزارش" data-en="Log">گزارش</span></button>
+        <button class="btn btn-outline btn-sm" style="flex:1;" onclick="doUndo()">↺
+          <span data-fa="واگرد" data-en="Undo">واگرد</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+     SCREEN: NIGHT ASSISTANT
+════════════════════════════════════════ -->
+  <div class="screen" id="s-night">
+    <div class="screen-header">
+      <div class="screen-header-back" onclick="goScreen('s-game')">←</div>
+      <div>
+        <div class="screen-header-title" id="nightTitle">🌙 دستیار شب</div>
+        <div class="screen-header-sub" data-fa="مرحله‌به‌مرحله، هیچ نقشی فراموش نمی‌شود"
+          data-en="Step by step, nothing gets forgotten">مرحله‌به‌مرحله، هیچ نقشی فراموش نمی‌شود</div>
+      </div>
+    </div>
+    <div style="padding:14px 18px 0;max-width:480px;margin:0 auto;width:100%;">
+      <div class="night-progress" id="nightProgress"></div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:0 18px 110px;max-width:480px;margin:0 auto;width:100%;-webkit-overflow-scrolling:touch;"
+      id="nightBody"></div>
+    <div class="bottom-fixed">
+      <div id="nightStepCounter" style="text-align:center;font-size:.72rem;color:var(--txt3);margin-bottom:2px;">
+      </div>
+      <div class="night-step-btns">
+        <button class="btn btn-outline" id="nightSkipBtn" onclick="nightSkipStep()" style="flex:1;"
+          data-fa="رد شدن" data-en="Skip">رد شدن</button>
+        <button class="btn btn-gold" id="nightNextBtn" onclick="nightPrimaryAction()" style="flex:2;">ادامه</button>
+      </div>
     </div>
   </div>
 
@@ -2212,6 +2630,17 @@
       </div>
       <div class="god-grid" id="godGrid"></div>
     </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+     GAME LOG OVERLAY
+════════════════════════════════════════ -->
+  <div id="logOverlay">
+    <div class="catalog-header">
+      <div class="screen-header-back" onclick="closeLog()">←</div>
+      <div class="screen-header-title" data-fa="📜 گزارش بازی" data-en="📜 Game Log">📜 گزارش بازی</div>
+    </div>
+    <div class="log-body" id="logBody"></div>
   </div>
 
   <div class="popup-overlay" id="challengePopup">
@@ -2627,6 +3056,13 @@
       selScenario: null, prevScreen: 's-home',
       sw: { running: false, sec: 0, iv: null },
       revealIdx: null, revealIv: null, pendingElim: null,
+      /* ── God Assistant module state ── */
+      gameStarted: false,
+      cycle: { phase: 'night', n: 1 },
+      night: { steps: [], idx: 0, done: [], choices: {}, resolved: false, result: null },
+      nightUsedOnce: {},
+      gameLog: [],
+      undo: [],
     };
 
     /* ══ DEFAULT COUNTS ══ */
@@ -2733,6 +3169,9 @@
       S.settings.lang = S.settings.lang === 'fa' ? 'en' : 'fa';
       applyLang();
       if (document.getElementById('catalogOverlay').classList.contains('vis')) renderCatalog();
+      if (document.getElementById('s-night').classList.contains('active')) renderNightScreen();
+      if (document.getElementById('logOverlay').classList.contains('vis')) renderLog();
+      if (S.assigned.length) renderGame();
     }
 
     /* ════ THEME ════ */
@@ -2770,6 +3209,7 @@
       window.scrollTo(0, 0);
       if (id === 's-settings') renderSettings();
       if (id === 's-editor') renderCardEditor();
+      if (id === 's-night') renderNightScreen();
     }
     function goBack() { sndClick(); goScreen(S.prevScreen); }
 
@@ -3000,6 +3440,15 @@
       S.revealed = new Array(n).fill(false);
       S.eliminated = new Array(n).fill(false);
       S.scores = { cit: 0, maf: 0, rnd: 1 };
+      /* دستیار گاد: cardCounts را از روی نقش‌های واقعاً تخصیص‌یافته بازسازی کن
+         (هم برای شروع سریع و هم برای تنظیم کارت‌ها درست کار می‌کند) */
+      S.cardCounts = {};
+      S.assigned.forEach(p => { S.cardCounts[p.roleId] = (S.cardCounts[p.roleId] || 0) + 1; });
+      S.gameStarted = true;
+      S.cycle = { phase: 'night', n: 1 };
+      S.gameLog = []; S.undo = []; S.nightUsedOnce = {};
+      S.night = freshNight();
+      addLog(`🎮 ${tr(`بازی با ${n} بازیکن شروع شد`, `Game started with ${n} players`)}`);
       swReset();
       renderGame();
       /* مستقیم به صفحه بازی برو — بدون صدای کلیک اضافی */
@@ -3017,15 +3466,19 @@
     const TB = { mafia: 'rgba(230,57,80,.1)', citizen: 'rgba(52,199,118,.08)', indie: 'rgba(240,147,43,.08)' };
     function teamName(team) { return S.settings.lang === 'en' ? TN_EN[team] : TN_FA[team]; }
 
-    function renderGame() { updateScores(); const list = document.getElementById('gameList'); list.innerHTML = ''; S.assigned.forEach((_, i) => list.appendChild(buildPlayerCard(i))); checkGodBtn(); }
+    function renderGame() { updateScores(); const list = document.getElementById('gameList'); list.innerHTML = ''; S.assigned.forEach((_, i) => list.appendChild(buildPlayerCard(i))); checkGodBtn(); renderMgmtPanel(); persistGameState(); }
     function buildPlayerCard(i) {
       const p = S.assigned[i]; const role = getRoleData(p.roleId);
       const elim = S.eliminated[i]; const done = S.revealed[i];
       const isEn = S.settings.lang === 'en';
       const wrap = document.createElement('div');
       wrap.className = 'pli' + (elim ? ' eliminated' : done ? ' done' : ''); wrap.id = 'pli_' + i;
-      const stTxt = done ? (isEn ? '✓ Role seen' : '✓ نقش نشان داده شد') : '';
-      wrap.innerHTML = `
+      const allRevealed = S.revealed.length > 0 && S.revealed.every(Boolean);
+
+      if (!allRevealed) {
+        /* ── حالت اصلی: نمایش خصوصی نقش (بدون تغییر) ── */
+        const stTxt = done ? (isEn ? '✓ Role seen' : '✓ نقش نشان داده شد') : '';
+        wrap.innerHTML = `
     <div class="pli-main">
       <div class="pli-num">${i + 1}</div>
       <div class="pli-name">${p.name}${elim ? ' 💀' : ''}</div>
@@ -3042,6 +3495,24 @@
         <button class="act-btn act-revive" onclick="revivePlayer(${i})">✨ ${isEn ? 'Revive' : 'احیا'}</button>
         <button class="act-btn act-revive" onclick="revivePlayer(${i})">🩺 ${isEn ? 'Revive' : 'دکتر نجات داد'}</button>
       `}
+    </div>`;
+        return wrap;
+      }
+
+      /* ── حالت جدید: پنل مدیریت بازیکنان (بعد از دیدن همهٔ نقش‌ها) ── */
+      const roleName = isEn ? role.nameEn : role.name;
+      const roleImg = role.img ? `<img src="${role.img}" style="width:15px;height:15px;object-fit:cover;border-radius:3px;vertical-align:-2px;">` : role.emoji;
+      wrap.innerHTML = `
+    <div class="pli-main">
+      <div class="pli-num">${i + 1}</div>
+      <div class="pli-name">${p.name}${elim ? ' 💀' : ''}</div>
+      <span class="role-badge" style="border-color:${TC[role.team]}55;color:${TC[role.team]}">${roleImg} ${roleName}</span>
+    </div>
+    <div class="pli-actions" style="justify-content:space-between;align-items:center;">
+      <span class="status-tag ${elim ? 'status-dead' : 'status-alive'}">${elim ? tr('💀 حذف‌شده', '💀 Eliminated') : tr('🟢 زنده', '🟢 Alive')}</span>
+      ${!elim
+          ? `<button class="act-btn act-elim" onclick="eliminatePlayer(${i})">🗳 ${tr('حذف', 'Eliminate')}</button>`
+          : `<button class="act-btn act-revive" onclick="revivePlayer(${i})">✨ ${tr('احیا', 'Revive')}</button>`}
     </div>`;
       return wrap;
     }
@@ -3122,6 +3593,7 @@
     function logAction(i, label) { beep(500, .08, 'sine', .18); toast(`${S.assigned[i].name}: ${label}`); }
     function eliminatePlayer(i) {
       sndElim(); if (S.eliminated[i]) { toast(tr('قبلاً حذف شده', 'Already eliminated')); return; }
+      pushUndo(tr(`حذف ${S.assigned[i].name}`, `Eliminate ${S.assigned[i].name}`));
       if (S.settings.challenge) {
         S.pendingElim = i;
         const ch = CHALLENGES[Math.floor(Math.random() * CHALLENGES.length)];
@@ -3132,13 +3604,24 @@
         document.getElementById('challengePopup').classList.add('vis');
       } else { doElim(i); }
     }
-    function doElim(i) {
+    function doElim(i, opts) {
+      opts = opts || {};
       S.eliminated[i] = true; const role = getRoleData(S.assigned[i].roleId);
       if (role.team === 'mafia') S.scores.cit++; else S.scores.maf++;
       updateScores(); refreshCard(i);
       toast(tr(`💀 ${S.assigned[i].name} حذف شد`, `💀 ${S.assigned[i].name} eliminated`));
+      if (!opts.silent) addLog(`🗳 ${tr(`${S.assigned[i].name} با رأی‌گیری روز حذف شد`, `${S.assigned[i].name} was eliminated by day vote`)}`);
+      renderMgmtPanel();
+      persistGameState();
     }
-    function revivePlayer(i) { beep(650, .12, 'sine', .2); S.eliminated[i] = false; refreshCard(i); toast(tr(`✨ ${S.assigned[i].name} احیا شد`, `✨ ${S.assigned[i].name} revived`)); }
+    function revivePlayer(i) {
+      beep(650, .12, 'sine', .2);
+      pushUndo(tr(`احیای ${S.assigned[i].name}`, `Revive ${S.assigned[i].name}`));
+      S.eliminated[i] = false; refreshCard(i);
+      addLog(`✨ ${tr(`${S.assigned[i].name} به بازی بازگشت`, `${S.assigned[i].name} returned to the game`)}`);
+      renderMgmtPanel(); persistGameState();
+      toast(tr(`✨ ${S.assigned[i].name} احیا شد`, `✨ ${S.assigned[i].name} revived`));
+    }
     function closeChallenge() { sndClick(); document.getElementById('challengePopup').classList.remove('vis'); if (S.pendingElim !== null) { doElim(S.pendingElim); S.pendingElim = null; } }
     function nextRound() { sndSelect(); S.scores.rnd++; updateScores(); toast(tr(`⏭ دور ${S.scores.rnd} شروع شد`, `⏭ Round ${S.scores.rnd} started`)); }
 
@@ -3161,7 +3644,16 @@
     /* ════ CONFIRM ════ */
     function confirmRestart() { sndClick(); document.getElementById('confirmModal').classList.add('vis'); }
     function closeConfirm() { sndClick(); document.getElementById('confirmModal').classList.remove('vis'); }
-    function doRestart() { sndClick(); closeConfirm(); S.scores = { cit: 0, maf: 0, rnd: 1 }; goScreen('s-home'); }
+    function doRestart() {
+      sndClick(); closeConfirm();
+      S.scores = { cit: 0, maf: 0, rnd: 1 };
+      S.gameStarted = false;
+      S.cycle = { phase: 'night', n: 1 };
+      S.night = { steps: [], idx: 0, done: [], choices: {}, resolved: false, result: null };
+      S.nightUsedOnce = {}; S.gameLog = []; S.undo = [];
+      clearGameState();
+      goScreen('s-home');
+    }
 
     /* ════ STOPWATCH ════ */
     function swToggle() {
@@ -3262,11 +3754,419 @@
       try { const d = localStorage.getItem('mfSettings'); if (d) { const p = JSON.parse(d); if (p.settings) Object.assign(S.settings, p.settings); if (p.scenario) S.selScenario = p.scenario; } } catch (e) { }
     }
 
+    /* ═══════════════════════════════════════════════════════════════
+       ماژول دستیار گاد (GOD ASSISTANT MODULE)
+       شامل: قالب ترتیب شب › پنل مدیریت بازیکنان › چرخهٔ روز/شب ›
+       دستیار شب گام‌به‌گام › گزارش بازی › واگرد آخرین عملیات › ذخیرهٔ زنده
+       ═══════════════════════════════════════════════════════════════ */
+
+    /* نقش‌هایی که استعلام کارآگاه برایشان «شهروند» نشان می‌دهد */
+    const INQUIRY_SHOWS_CITIZEN = new Set(['godfather', 'denmafia', 'zodiac']);
+
+    /* قالب ترتیب بیدار شدن نقش‌ها در شب — order کوچکتر یعنی زودتر بیدار می‌شود
+       kind: kill(حذف، با save خنثی می‌شود) | save(نجات) | inquiry(استعلام) | action(ثبت، بدون محاسبه) | sniper(منطق ویژه)
+       once: فقط یک‌بار در کل بازی | evenOnly: فقط شب‌های زوج | firstNightOnly: فقط شب اول | deadPool: هدف از میان مرده‌ها | multi: چندانتخابی */
+    const NIGHT_TEMPLATE = [
+      { id: 'executioner', order: 1, kind: 'action', firstNightOnly: true, multi: true },
+      { id: 'sherlock', order: 2, kind: 'action' },
+      { id: 'psycho', order: 3, kind: 'action' },
+      { id: 'guard', order: 4, kind: 'save' },
+      { id: 'gard', order: 5, kind: 'save' },
+      { id: 'lover', order: 6, kind: 'action' },
+      { id: 'matador', order: 7, kind: 'action' },
+      { id: 'hostage', order: 8, kind: 'action' },
+      { id: 'wizard', order: 9, kind: 'action' },
+      { id: 'boxer', order: 10, kind: 'action' },
+      { id: 'mafiaTeam', order: 11, kind: 'kill', virtual: true, roleIds: ['mafia', 'godfather', 'denmafia'] },
+      { id: 'killer', order: 12, kind: 'kill' },
+      { id: 'shayad', order: 13, kind: 'action' },
+      { id: 'shobade', order: 14, kind: 'action' },
+      { id: 'lawyer', order: 15, kind: 'action' },
+      { id: 'mafiaspy', order: 16, kind: 'inquiry' },
+      { id: 'lector', order: 17, kind: 'save' },
+      { id: 'poisoner', order: 18, kind: 'action' },
+      { id: 'zodiac', order: 19, kind: 'kill', evenOnly: true },
+      { id: 'zombie', order: 20, kind: 'action' },
+      { id: 'fox', order: 21, kind: 'inquiry', multi: true },
+      { id: 'sniper', order: 22, kind: 'sniper', once: true },
+      { id: 'detective', order: 23, kind: 'inquiry' },
+      { id: 'mohageg', order: 24, kind: 'inquiry' },
+      { id: 'coinkeen', order: 25, kind: 'inquiry' },
+      { id: 'spy', order: 26, kind: 'inquiry' },
+      { id: 'informer', order: 27, kind: 'action' },
+      { id: 'doctor', order: 28, kind: 'save' },
+      { id: 'blacksmith', order: 29, kind: 'save' },
+      { id: 'atar', order: 30, kind: 'action' },
+      { id: 'angel', order: 31, kind: 'save' },
+      { id: 'drjamshid', order: 32, kind: 'action', once: true, deadPool: true },
+      { id: 'guny', order: 33, kind: 'action', once: true },
+      { id: 'leo', order: 34, kind: 'action', once: true },
+      { id: 'kad', order: 35, kind: 'action' },
+      { id: 'terrorist', order: 36, kind: 'action', once: true },
+      { id: 'takavar', order: 37, kind: 'action' },
+      { id: 'bellman', order: 38, kind: 'action' },
+    ];
+
+    function computeNightSteps() {
+      const list = [];
+      NIGHT_TEMPLATE.forEach(t => {
+        if (t.firstNightOnly && S.cycle.n !== 1) return;
+        if (t.evenOnly && S.cycle.n % 2 !== 0) return;
+        if (t.once && S.nightUsedOnce[t.id]) return;
+        let present, roleForDisplay, subIds;
+        if (t.virtual) {
+          subIds = t.roleIds.filter(rid => (S.cardCounts[rid] || 0) > 0);
+          present = subIds.length > 0;
+          roleForDisplay = subIds[0];
+        } else {
+          present = (S.cardCounts[t.id] || 0) > 0;
+          roleForDisplay = t.id; subIds = [t.id];
+        }
+        if (!present) return;
+        list.push(Object.assign({}, t, { key: t.id, subIds, roleForDisplay }));
+      });
+      list.sort((a, b) => a.order - b.order);
+      return list;
+    }
+    function freshNight() {
+      const steps = computeNightSteps();
+      return { steps, idx: 0, done: new Array(steps.length).fill(false), choices: {}, resolved: false, result: null };
+    }
+
+    /* ── شمار زنده‌ها به تفکیک تیم ── */
+    function aliveCountByTeam() {
+      const c = { citizen: 0, mafia: 0, indie: 0 };
+      S.assigned.forEach((p, i) => {
+        if (S.eliminated[i]) return;
+        const role = getRoleData(p.roleId);
+        if (c[role.team] !== undefined) c[role.team]++;
+      });
+      return c;
+    }
+
+    /* ── گزارش بازی (GAME LOG) ── */
+    function addLog(fa, en) {
+      if (!S.cycle) return;
+      const cyc = S.cycle.phase === 'night' ? tr(`شب ${S.cycle.n}`, `Night ${S.cycle.n}`) : tr(`روز ${S.cycle.n}`, `Day ${S.cycle.n}`);
+      const time = new Date().toLocaleTimeString(S.settings.lang === 'en' ? 'en-US' : 'fa-IR', { hour: '2-digit', minute: '2-digit' });
+      S.gameLog.push({ id: Date.now() + Math.random(), cyc, fa, en: en || fa, time });
+      if (S.gameLog.length > 400) S.gameLog.shift();
+    }
+    function openLog() { sndClick(); renderLog(); document.getElementById('logOverlay').classList.add('vis'); }
+    function closeLog() { sndClick(); document.getElementById('logOverlay').classList.remove('vis'); }
+    function renderLog() {
+      const body = document.getElementById('logBody');
+      if (!S.gameLog.length) { body.innerHTML = `<div class="log-empty">📭 ${tr('هنوز اتفاقی ثبت نشده است', 'Nothing has been logged yet')}</div>`; return; }
+      body.innerHTML = S.gameLog.map(e => `
+      <div class="log-entry">
+        <span class="log-tag">${e.cyc}</span>
+        <div class="log-main">
+          <div class="log-text">${tr(e.fa, e.en)}</div>
+          <div class="log-time">${e.time}</div>
+        </div>
+      </div>`).join('');
+      body.scrollTop = body.scrollHeight;
+    }
+
+    /* ── واگرد آخرین عملیات (UNDO) ── */
+    function pushUndo(labelFa, labelEn) {
+      try {
+        const snap = JSON.stringify({ eliminated: S.eliminated, scores: S.scores, cycle: S.cycle, night: S.night, nightUsedOnce: S.nightUsedOnce, gameLog: S.gameLog });
+        S.undo.push({ labelFa, labelEn: labelEn || labelFa, snap });
+        if (S.undo.length > 25) S.undo.shift();
+      } catch (e) { }
+    }
+    function doUndo() {
+      sndClick();
+      if (!S.undo.length) { toast(tr('چیزی برای واگرد نیست', 'Nothing to undo')); return; }
+      const last = S.undo.pop();
+      try {
+        const d = JSON.parse(last.snap);
+        S.eliminated = d.eliminated; S.scores = d.scores; S.cycle = d.cycle;
+        S.night = d.night; S.nightUsedOnce = d.nightUsedOnce; S.gameLog = d.gameLog;
+      } catch (e) { return; }
+      renderGame();
+      if (document.getElementById('s-night').classList.contains('active')) renderNightScreen();
+      persistGameState();
+      toast(tr(`↺ واگرد شد: ${last.labelFa}`, `↺ Undone: ${last.labelEn}`));
+    }
+
+    /* ── پنل مدیریت: شمار تیم‌ها + نوار روز/شب ── */
+    function primaryCycleLabel() {
+      if (!S.cycle) return '';
+      if (S.cycle.phase === 'night' && !S.night.resolved) return tr('🌙 شروع دستیار شب', '🌙 Start Night Assistant');
+      if (S.cycle.phase === 'night' && S.night.resolved) return tr(`☀️ شروع روز ${S.cycle.n}`, `☀️ Start Day ${S.cycle.n}`);
+      return tr(`🌙 پایان روز، شب ${S.cycle.n + 1}`, `🌙 End Day → Night ${S.cycle.n + 1}`);
+    }
+    function primaryCycleAction() {
+      sndSelect();
+      if (S.cycle.phase === 'night' && !S.night.resolved) { goScreen('s-night'); return; }
+      if (S.cycle.phase === 'night' && S.night.resolved) { startDayPhase(); return; }
+      startNightPhase();
+    }
+    function renderMgmtPanel() {
+      if (!S.assigned.length) return;
+      const counts = aliveCountByTeam();
+      const elTC = document.getElementById('teamCitVal'); if (elTC) elTC.textContent = counts.citizen;
+      const elTM = document.getElementById('teamMafVal'); if (elTM) elTM.textContent = counts.mafia;
+      const elTI = document.getElementById('teamIndVal'); if (elTI) elTI.textContent = counts.indie;
+      const cp = document.getElementById('cyclePill');
+      if (cp && S.cycle) {
+        cp.className = 'cycle-pill ' + (S.cycle.phase === 'night' ? 'is-night' : 'is-day');
+        cp.textContent = S.cycle.phase === 'night' ? tr(`🌙 شب ${S.cycle.n}`, `🌙 Night ${S.cycle.n}`) : tr(`☀️ روز ${S.cycle.n}`, `☀️ Day ${S.cycle.n}`);
+      }
+      const pb = document.getElementById('cycleActionBtn');
+      if (pb) pb.textContent = primaryCycleLabel();
+    }
+
+    /* ── گذار روز / شب ── */
+    function startDayPhase() {
+      pushUndo(tr('شروع روز', 'Start day'));
+      S.cycle.phase = 'day';
+      addLog(`☀️ ${tr(`روز ${S.cycle.n} شروع شد`, `Day ${S.cycle.n} started`)}`);
+      renderGame(); goScreen('s-game'); persistGameState();
+    }
+    function startNightPhase() {
+      pushUndo(tr('شروع شب بعد', 'Start next night'));
+      S.cycle.phase = 'night'; S.cycle.n++;
+      S.night = freshNight();
+      addLog(`🌙 ${tr(`شب ${S.cycle.n} شروع شد`, `Night ${S.cycle.n} started`)}`);
+      renderGame(); goScreen('s-night'); persistGameState();
+    }
+
+    /* ── دستیار شب: رندر ── */
+    function renderNightScreen() {
+      if (!S.assigned.length) { goScreen('s-game'); return; }
+      const title = document.getElementById('nightTitle');
+      if (title) title.textContent = tr(`🌙 دستیار شب — شب ${S.cycle.n}`, `🌙 Night Assistant — Night ${S.cycle.n}`);
+      const steps = S.night.steps;
+      const prog = document.getElementById('nightProgress');
+      prog.style.opacity = '';
+      prog.innerHTML = steps.map((st, i) => {
+        const role = getRoleData(st.roleForDisplay);
+        const cls = (!S.night.resolved && i === S.night.idx) ? 'current' : (S.night.done[i] ? 'step-done' : '');
+        const label = st.virtual ? tr('مافیا', 'Mafia') : (S.settings.lang === 'en' ? role.nameEn : role.name);
+        const emoji = role.img ? '🎭' : role.emoji;
+        return `<div class="night-chip ${cls}" onclick="nightJump(${i})"><div class="nc-emoji">${emoji}</div><div class="nc-label">${label}</div></div>`;
+      }).join('');
+
+      const skipBtn = document.getElementById('nightSkipBtn');
+      const nextBtn = document.getElementById('nightNextBtn');
+      const counter = document.getElementById('nightStepCounter');
+
+      if (!steps.length) {
+        document.getElementById('nightBody').innerHTML = `
+        <div class="night-card night-empty-box">
+          <div style="font-size:2.2rem;margin-bottom:10px;">🌙</div>
+          <div style="font-weight:800;margin-bottom:6px;">${tr('نقش شب‌فعالی در این بازی نیست', 'No night-active roles in this game')}</div>
+          <div style="font-size:.8rem;color:var(--txt3);">${tr('می‌توانید مستقیم به روز بروید', 'You can move straight to day')}</div>
+        </div>`;
+        skipBtn.style.display = 'none'; counter.textContent = '';
+        nextBtn.textContent = tr('☀️ شروع روز', '☀️ Start Day');
+        S.night.resolved = true;
+        return;
+      }
+      skipBtn.style.display = S.night.resolved ? 'none' : 'block';
+      if (S.night.resolved) { renderNightResult(); return; }
+
+      renderNightStepDetail(steps[S.night.idx]);
+      counter.textContent = tr(`مرحله ${S.night.idx + 1} از ${steps.length}`, `Step ${S.night.idx + 1} of ${steps.length}`);
+      const isLast = S.night.idx === steps.length - 1;
+      nextBtn.textContent = isLast ? tr('✅ پایان شب و محاسبه نتیجه', '✅ End Night & Calculate') : tr('✅ ثبت و مرحله بعد', '✅ Record & Next');
+    }
+
+    const NIGHT_PROMPTS = {
+      kill: () => tr('امشب چه کسی را هدف می‌گیرند؟', 'Who do they target tonight?'),
+      save: () => tr('امشب از چه کسی محافظت می‌کنند؟', 'Who do they protect tonight?'),
+      inquiry: () => tr('امشب دربارهٔ چه کسی می‌پرسند؟', 'Who do they ask about tonight?'),
+      sniper: () => tr('تک‌تیرانداز به چه کسی شلیک می‌کند؟', 'Who does the sniper shoot?'),
+      action: () => tr('امشب چه کسی را انتخاب می‌کنند؟', 'Who do they choose tonight?'),
+    };
+    function inquiryHint(step) {
+      const ch = S.night.choices[step.key];
+      if (!ch || ch.skipped || !ch.targets || !ch.targets.length) return null;
+      const idx = ch.targets[0]; const p = S.assigned[idx]; const role = getRoleData(p.roleId);
+      const isMafia = role.team === 'mafia' && !INQUIRY_SHOWS_CITIZEN.has(p.roleId);
+      return { idx, name: p.name, isMafia };
+    }
+    function renderNightStepDetail(step) {
+      const role = getRoleData(step.roleForDisplay);
+      const desc = tr(role.desc, role.descEn) || tr('توضیحی ثبت نشده است', 'No description available');
+      const name = step.virtual ? tr('مافیا (تیم)', 'Mafia (Team)') : (S.settings.lang === 'en' ? role.nameEn : role.name);
+      const teamColor = TC[role.team] || 'var(--gold)';
+      const pool = (step.deadPool ? S.assigned.map((p, i) => ({ p, i })).filter(o => S.eliminated[o.i])
+        : S.assigned.map((p, i) => ({ p, i })).filter(o => !S.eliminated[o.i]));
+      const ch = S.night.choices[step.key] || { targets: [] };
+      const targets = ch.targets || [];
+      let targetHtml;
+      if (!pool.length) { targetHtml = `<div class="target-empty">${tr('بازیکن مناسبی موجود نیست', 'No suitable player available')}</div>`; }
+      else {
+        targetHtml = `<div class="target-grid">` + pool.map(o =>
+          `<button class="target-btn ${targets.includes(o.i) ? 'sel' : ''}" onclick="nightSelectTarget(${o.i})">${o.p.name}</button>`
+        ).join('') + `</div>`;
+      }
+      let hintHtml = '';
+      if (step.kind === 'inquiry') {
+        const hint = inquiryHint(step);
+        if (hint) {
+          hintHtml = hint.isMafia
+            ? `<div class="night-hint hint-mafia">🔴 ${tr(`نتیجه: ${hint.name} مافیاست`, `Result: ${hint.name} is Mafia`)}</div>`
+            : `<div class="night-hint hint-clear">🟢 ${tr(`نتیجه: ${hint.name} مافیا نیست`, `Result: ${hint.name} is not Mafia`)}</div>`;
+        }
+      }
+      let flags = '';
+      if (step.once) flags += `<span class="night-flag">⚡ ${tr('یک‌بار در کل بازی', 'Once per game')}</span> `;
+      if (step.evenOnly) flags += `<span class="night-flag">🔁 ${tr('فقط شب‌های زوج', 'Even nights only')}</span> `;
+      if (step.firstNightOnly) flags += `<span class="night-flag">1️⃣ ${tr('فقط شب اول', 'First night only')}</span>`;
+      const emojiHtml = role.img ? `<img src="${role.img}" style="width:32px;height:32px;object-fit:cover;border-radius:8px;">` : role.emoji;
+      document.getElementById('nightBody').innerHTML = `
+      <div class="night-card">
+        <div class="night-card-head">
+          <div class="night-card-emoji">${emojiHtml}</div>
+          <div><div class="night-card-name">${name}</div><div class="night-card-team" style="color:${teamColor}">${teamName(role.team)}</div></div>
+        </div>
+        ${flags ? `<div>${flags}</div>` : ''}
+        <div class="night-card-desc">${desc}</div>
+        <div class="night-card-prompt">${(NIGHT_PROMPTS[step.kind] || NIGHT_PROMPTS.action)()}</div>
+        ${targetHtml}
+        ${hintHtml}
+      </div>`;
+    }
+    function renderNightResult() {
+      const r = S.night.result;
+      let html;
+      if (!r || !r.deadNames.length) {
+        html = `<div class="night-card night-result-box">
+        <div class="night-result-icon">🛡️</div>
+        <div class="night-result-title" style="color:var(--green)">${tr('کسی حذف نشد', 'No one was eliminated')}</div>
+        <div class="night-result-sub">${tr('شب به آرامی گذشت', 'The night passed quietly')}</div>
+      </div>`;
+      } else {
+        const names = r.deadNames.join(tr('، ', ', '));
+        html = `<div class="night-card night-result-box">
+        <div class="night-result-icon">💀</div>
+        <div class="night-result-title" style="color:var(--red)">${names}</div>
+        <div class="night-result-sub">${tr('امشب از بازی حذف شد', 'was eliminated tonight')}</div>
+      </div>`;
+      }
+      document.getElementById('nightBody').innerHTML = html;
+      document.getElementById('nightStepCounter').textContent = tr('نتیجهٔ شب', 'Night result');
+      document.getElementById('nightNextBtn').textContent = tr(`☀️ شروع روز ${S.cycle.n}`, `☀️ Start Day ${S.cycle.n}`);
+    }
+
+    /* ── دستیار شب: کنترل ── */
+    function nightJump(i) { if (S.night.resolved) return; sndClick(); S.night.idx = i; renderNightScreen(); }
+    function nightSelectTarget(idx) {
+      const step = S.night.steps[S.night.idx]; if (!step) return;
+      sndSelect();
+      if (!S.night.choices[step.key]) S.night.choices[step.key] = { targets: [] };
+      const ch = S.night.choices[step.key]; ch.skipped = false; if (!ch.targets) ch.targets = [];
+      if (step.multi) { const pos = ch.targets.indexOf(idx); if (pos > -1) ch.targets.splice(pos, 1); else ch.targets.push(idx); }
+      else { ch.targets = (ch.targets[0] === idx) ? [] : [idx]; }
+      renderNightStepDetail(step);
+    }
+    function logNightStepAction(step) {
+      const ch = S.night.choices[step.key] || { targets: [], skipped: true };
+      const role = getRoleData(step.roleForDisplay);
+      const rname = step.virtual ? tr('مافیا', 'Mafia') : tr(role.name, role.nameEn);
+      if (ch.skipped || !ch.targets || !ch.targets.length) { addLog(`⏭ ${rname}: ${tr('کاری انجام نداد', 'took no action')}`); return; }
+      const names = ch.targets.map(i => S.assigned[i].name).join(tr('، ', ', '));
+      if (step.kind === 'inquiry') {
+        const hint = inquiryHint(step);
+        const res = hint ? (hint.isMafia ? tr('مافیا', 'Mafia') : tr('غیرمافیا', 'Not Mafia')) : '';
+        addLog(`🔎 ${rname}: ${tr(`دربارهٔ «${names}» پرسید — نتیجه: ${res}`, `asked about "${names}" — result: ${res}`)}`);
+      } else if (step.kind === 'kill' || step.kind === 'sniper') {
+        addLog(`🎯 ${rname}: ${tr(`«${names}» را هدف گرفت`, `targeted "${names}"`)}`);
+      } else if (step.kind === 'save') {
+        addLog(`🛡 ${rname}: ${tr(`از «${names}» محافظت کرد`, `protected "${names}"`)}`);
+      } else {
+        addLog(`✏️ ${rname}: ${tr(`«${names}» را انتخاب کرد`, `chose "${names}"`)}`);
+      }
+    }
+    function nightSkipStep() {
+      if (S.night.resolved || !S.night.steps.length) return;
+      sndClick(); pushUndo(tr('رد کردن مرحلهٔ شب', 'Skip night step'));
+      const step = S.night.steps[S.night.idx];
+      S.night.choices[step.key] = { targets: [], skipped: true };
+      logNightStepAction(step); nightAdvanceStep();
+    }
+    function nightPrimaryAction() {
+      if (!S.night.steps.length || S.night.resolved) { startDayPhase(); return; }
+      sndSelect(); pushUndo(tr('ثبت اقدام شب', 'Record night action'));
+      const step = S.night.steps[S.night.idx];
+      if (!S.night.choices[step.key]) S.night.choices[step.key] = { targets: [], skipped: true };
+      if (step.once && S.night.choices[step.key].targets && S.night.choices[step.key].targets.length) S.nightUsedOnce[step.id] = true;
+      logNightStepAction(step); nightAdvanceStep();
+    }
+    function nightAdvanceStep() {
+      S.night.done[S.night.idx] = true;
+      if (S.night.idx < S.night.steps.length - 1) { S.night.idx++; renderNightScreen(); persistGameState(); }
+      else { finishNight(); }
+    }
+
+    /* ── محاسبهٔ نتیجهٔ شب ── */
+    function finishNight() {
+      const killTargets = []; const saveSet = new Set();
+      S.night.steps.forEach(step => {
+        const ch = S.night.choices[step.key];
+        if (!ch || ch.skipped || !ch.targets || !ch.targets.length) return;
+        if (step.kind === 'kill') { ch.targets.forEach(ti => killTargets.push(ti)); }
+        else if (step.kind === 'save') { ch.targets.forEach(ti => saveSet.add(ti)); }
+        else if (step.kind === 'sniper') {
+          const ti = ch.targets[0]; const role = getRoleData(S.assigned[ti].roleId);
+          if (role.team === 'mafia') killTargets.push(ti);
+          else { const sIdx = S.assigned.findIndex(p => p.roleId === 'sniper'); if (sIdx > -1) killTargets.push(sIdx); }
+        }
+      });
+      const finalDead = [];
+      killTargets.forEach(ti => { if (!saveSet.has(ti) && !S.eliminated[ti] && finalDead.indexOf(ti) === -1) finalDead.push(ti); });
+      finalDead.forEach(i => doElim(i, { silent: true }));
+      const deadNames = finalDead.map(i => S.assigned[i].name);
+      if (!deadNames.length) { addLog(`🛡 ${tr(`پایان شب ${S.cycle.n}: کسی حذف نشد`, `End of Night ${S.cycle.n}: no one eliminated`)}`); sndSelect(); }
+      else { const joined = deadNames.join(tr('، ', ', ')); addLog(`💀 ${tr(`پایان شب ${S.cycle.n}: ${joined} حذف شد${deadNames.length > 1 ? 'ند' : ''}`, `End of Night ${S.cycle.n}: ${joined} eliminated`)}`); sndElim(); }
+      S.night.resolved = true; S.night.result = { deadIdx: finalDead, deadNames };
+      renderGame(); renderNightScreen(); persistGameState();
+    }
+
+    /* ── ذخیرهٔ زندهٔ وضعیت بازی (LocalStorage) ── */
+    function persistGameState() {
+      try {
+        localStorage.setItem('mfGameState', JSON.stringify({
+          assigned: S.assigned, revealed: S.revealed, eliminated: S.eliminated, scores: S.scores,
+          cardCounts: S.cardCounts, cycle: S.cycle, night: S.night, nightUsedOnce: S.nightUsedOnce,
+          gameLog: S.gameLog, gameStarted: S.gameStarted
+        }));
+      } catch (e) { }
+    }
+    function loadGameState() {
+      try {
+        const d = localStorage.getItem('mfGameState'); if (!d) return false;
+        const p = JSON.parse(d); if (!p.gameStarted || !p.assigned || !p.assigned.length) return false;
+        S.assigned = p.assigned;
+        S.revealed = p.revealed || S.assigned.map(() => true);
+        S.eliminated = p.eliminated || S.assigned.map(() => false);
+        S.scores = p.scores || { cit: 0, maf: 0, rnd: 1 };
+        S.cardCounts = p.cardCounts || S.cardCounts;
+        S.cycle = p.cycle || { phase: 'night', n: 1 };
+        S.night = p.night || freshNight();
+        S.nightUsedOnce = p.nightUsedOnce || {};
+        S.gameLog = p.gameLog || [];
+        S.gameStarted = true;
+        return true;
+      } catch (e) { return false; }
+    }
+    function clearGameState() { try { localStorage.removeItem('mfGameState'); } catch (e) { } }
+
     /* ════ INIT ════ */
     function init() {
       loadSaved(); loadSettings(); loadPlayers();
       applyTheme(); applyLang(); applyBgMusic();
       renderChips();
+      if (loadGameState()) {
+        renderGame();
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('s-game').classList.add('active');
+      }
     }
     init();
   </script>
