@@ -2135,6 +2135,19 @@
       color: var(--green);
     }
 
+    .night-card-blocked {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: .84rem;
+      font-weight: 700;
+      padding: 10px 12px;
+      border-radius: var(--r2);
+      margin: 12px 0 2px;
+      background: var(--orange2);
+      color: var(--orange);
+    }
+
     .night-step-btns {
       display: flex;
       gap: 8px;
@@ -2917,7 +2930,7 @@
         descEn: 'Can take one citizen hostage each night. That person cannot act.'
       },
       {
-        id: 'informer', name: 'خبرچین', nameEn: 'Informant', emoji: '🦅', img: null, team: 'mafia', cardBg: 'rc-informer',
+        id: 'mafiainformer', name: 'خبرچین مافیا', nameEn: 'Mafia Informant', emoji: '🦅', img: null, team: 'mafia', cardBg: 'rc-informer',
         desc: 'توضیحات بسته به سناریو است و توضیح خالص ندارد.',
         descEn: 'Gets limited info about nightly activities and reports each night.'
       },
@@ -2927,8 +2940,8 @@
         descEn: 'Mafia spy. Can report special citizens\' identities to the mafia team.'
       },
       {
-        id: 'killer', name: 'جلاد', nameEn: 'Killer', emoji: '🔪', img: null, team: 'mafia', cardBg: 'rc-serialkiller',
-        desc: 'اگر با رأی‌گیری روز از بازی خارج شود، می‌تواند یک نفر را همراه خودش حذف کند.',
+        id: 'killer', name: 'جلاد', nameEn: 'Killer', emoji: '🔪', img: null, team: 'indie', cardBg: 'rc-serialkiller',
+        desc: 'هر شب یک نفر را حذف می‌کند. به هیچ تیمی وابسته نیست و اگر آخرین بازماندهٔ بازی باشد برنده است.',
         descEn: 'Kills one person every night. On no team. Wins if the last one standing.'
       },
       {
@@ -2967,7 +2980,7 @@
         descEn: 'Wakes with mafia. Whoever is chosen, their investigation result flips. Can choose self.'
       },
       {
-        id: 'lover', name: 'معشوقه', nameEn: 'Lover', emoji: '💋', img: null, team: 'mafia', cardBg: 'rc-lawyer',
+        id: 'mafialover', name: 'معشوقهٔ مافیا', nameEn: 'Mafia Lover', emoji: '💋', img: null, team: 'mafia', cardBg: 'rc-lawyer',
         desc: 'هر شب یک بازیکن را انتخاب می‌کند و آن بازیکن در همان شب نمی‌تواند از قابلیت نقش خود استفاده کند؛ اگر معشوقه کشته شود، بازیکن انتخاب‌شده نیز معمولاً همراه او از بازی خارج می‌شود (بسته به قوانین سناریو).',
         descEn: ''
       },
@@ -3060,7 +3073,9 @@
       gameStarted: false,
       cycle: { phase: 'night', n: 1 },
       night: { steps: [], idx: 0, done: [], choices: {}, resolved: false, result: null },
-      nightUsedOnce: {},
+      nightUseCount: {},
+      lastSaveTarget: {},
+      pendingDeaths: [],
       gameLog: [],
       undo: [],
     };
@@ -3073,7 +3088,7 @@
       /* Auto balance by player count */
       const mafN = Math.max(1, Math.floor(n / 3));
       c['godfather'] = 1;
-      const mafPool = ['mafia', 'lector', 'nato', 'hostage', 'mafiaspy', 'infiltrator', 'poisoner', 'lawyer', 'negotiator', 'mterrorist'];
+      const mafPool = ['mafia', 'lector', 'nato', 'hostage', 'mafiaspy', 'infiltrator', 'poisoner', 'lawyer', 'mterrorist'];
       for (let i = 1; i < mafN; i++) c[mafPool[(i - 1) % mafPool.length]] = (c[mafPool[(i - 1) % mafPool.length]] || 0) + 1;
       if (n >= 5) c['doctor'] = 1;
       if (n >= 6) c['detective'] = 1;
@@ -3395,7 +3410,7 @@
       } else {
         const mafN = Math.max(1, Math.floor(n / 3));
         pool.push('godfather');
-        const mExt = ['mafia', 'lector', 'nato', 'hostage', 'mafiaspy', 'infiltrator', 'poisoner', 'lawyer', 'negotiator', 'mterrorist'];
+        const mExt = ['mafia', 'lector', 'nato', 'hostage', 'mafiaspy', 'infiltrator', 'poisoner', 'lawyer', 'mterrorist'];
         for (let i = 1; i < mafN; i++) pool.push(mExt[(i - 1) % mExt.length]);
         if (n >= 5) pool.push('doctor'); if (n >= 6) pool.push('detective'); if (n >= 7) pool.push('sniper');
         if (n >= 8) pool.push('mayor'); if (n >= 9) pool.push('hardman'); if (n >= 10) pool.push('boxer');
@@ -3446,7 +3461,7 @@
       S.assigned.forEach(p => { S.cardCounts[p.roleId] = (S.cardCounts[p.roleId] || 0) + 1; });
       S.gameStarted = true;
       S.cycle = { phase: 'night', n: 1 };
-      S.gameLog = []; S.undo = []; S.nightUsedOnce = {};
+      S.gameLog = []; S.undo = []; S.nightUseCount = {}; S.lastSaveTarget = {}; S.pendingDeaths = [];
       S.night = freshNight();
       addLog(`🎮 ${tr(`بازی با ${n} بازیکن شروع شد`, `Game started with ${n} players`)}`);
       swReset();
@@ -3650,7 +3665,7 @@
       S.gameStarted = false;
       S.cycle = { phase: 'night', n: 1 };
       S.night = { steps: [], idx: 0, done: [], choices: {}, resolved: false, result: null };
-      S.nightUsedOnce = {}; S.gameLog = []; S.undo = [];
+      S.nightUseCount = {}; S.lastSaveTarget = {}; S.pendingDeaths = []; S.gameLog = []; S.undo = [];
       clearGameState();
       goScreen('s-home');
     }
@@ -3764,62 +3779,74 @@
     const INQUIRY_SHOWS_CITIZEN = new Set(['godfather', 'denmafia', 'zodiac']);
 
     /* قالب ترتیب بیدار شدن نقش‌ها در شب — order کوچکتر یعنی زودتر بیدار می‌شود
-       kind: kill(حذف، با save خنثی می‌شود) | save(نجات) | inquiry(استعلام) | action(ثبت، بدون محاسبه) | sniper(منطق ویژه)
-       once: فقط یک‌بار در کل بازی | evenOnly: فقط شب‌های زوج | firstNightOnly: فقط شب اول | deadPool: هدف از میان مرده‌ها | multi: چندانتخابی */
+       kind: kill(حذف، با save خنثی می‌شود) | save(نجات) | inquiry(استعلام) | action(معمولاً فقط ثبت می‌شود، مگر نقش‌هایی که در finishNight منطق اختصاصی دارند: fox, poisoner, coinkeen, drjamshid, angel) | sniper(منطق ویژه)
+       maxUses: حداکثر دفعات در کل بازی (جایگزین once) | evenOnly: فقط شب‌های زوج | firstNightOnly: فقط شب اول
+       deadPool: هدف از میان مرده‌ها | multi: چندانتخابی | excludeSelf: نمی‌تواند خودش را انتخاب کند
+       targetScope: opposing(فقط تیم مقابل) | same(فقط هم‌تیمی) | mafia(فقط تیم مافیا) | any(پیش‌فرض، همه)
+       blocks: این نقش قدرت شب هدفش را برای همان شب غیرفعال می‌کند
+       guards: این نقش کاملاً هدف را از دسترس بقیهٔ نقش‌ها (چه حمله چه بررسی) امشب خارج می‌کند */
     const NIGHT_TEMPLATE = [
       { id: 'executioner', order: 1, kind: 'action', firstNightOnly: true, multi: true },
       { id: 'sherlock', order: 2, kind: 'action' },
-      { id: 'psycho', order: 3, kind: 'action' },
-      { id: 'guard', order: 4, kind: 'save' },
-      { id: 'gard', order: 5, kind: 'save' },
-      { id: 'lover', order: 6, kind: 'action' },
-      { id: 'matador', order: 7, kind: 'action' },
-      { id: 'hostage', order: 8, kind: 'action' },
-      { id: 'wizard', order: 9, kind: 'action' },
-      { id: 'boxer', order: 10, kind: 'action' },
-      { id: 'mafiaTeam', order: 11, kind: 'kill', virtual: true, roleIds: ['mafia', 'godfather', 'denmafia'] },
-      { id: 'killer', order: 12, kind: 'kill' },
+      { id: 'psycho', order: 3, kind: 'action', targetScope: 'mafia', blocks: true },
+      { id: 'guard', order: 4, kind: 'save', guards: true },
+      { id: 'gard', order: 5, kind: 'save', guards: true },
+      { id: 'lover', order: 6, kind: 'action', blocks: true },
+      { id: 'mafialover', order: 6.5, kind: 'action', blocks: true },
+      { id: 'matador', order: 7, kind: 'action', blocks: true },
+      { id: 'hostage', order: 8, kind: 'action', blocks: true },
+      { id: 'wizard', order: 9, kind: 'action', blocks: true },
+      { id: 'boxer', order: 10, kind: 'action', blocks: true, maxUses: 2 },
+      { id: 'mafiaTeam', order: 11, kind: 'kill', virtual: true, roleIds: ['godfather', 'denmafia'], targetScope: 'opposing' },
+      { id: 'killer', order: 12, kind: 'kill', targetScope: 'opposing' },
       { id: 'shayad', order: 13, kind: 'action' },
       { id: 'shobade', order: 14, kind: 'action' },
       { id: 'lawyer', order: 15, kind: 'action' },
       { id: 'mafiaspy', order: 16, kind: 'inquiry' },
-      { id: 'lector', order: 17, kind: 'save' },
+      { id: 'lector', order: 17, kind: 'save', targetScope: 'same' },
       { id: 'poisoner', order: 18, kind: 'action' },
-      { id: 'zodiac', order: 19, kind: 'kill', evenOnly: true },
+      { id: 'zodiac', order: 19, kind: 'kill', evenOnly: true, targetScope: 'opposing' },
       { id: 'zombie', order: 20, kind: 'action' },
       { id: 'fox', order: 21, kind: 'inquiry', multi: true },
-      { id: 'sniper', order: 22, kind: 'sniper', once: true },
+      { id: 'sniper', order: 22, kind: 'sniper', maxUses: 1 },
       { id: 'detective', order: 23, kind: 'inquiry' },
       { id: 'mohageg', order: 24, kind: 'inquiry' },
       { id: 'coinkeen', order: 25, kind: 'inquiry' },
       { id: 'spy', order: 26, kind: 'inquiry' },
       { id: 'informer', order: 27, kind: 'action' },
-      { id: 'doctor', order: 28, kind: 'save' },
-      { id: 'blacksmith', order: 29, kind: 'save' },
+      { id: 'mafiainformer', order: 27.5, kind: 'action' },
+      { id: 'doctor', order: 28, kind: 'save', noRepeatTarget: true },
+      { id: 'blacksmith', order: 29, kind: 'save', excludeSelf: true },
       { id: 'atar', order: 30, kind: 'action' },
-      { id: 'angel', order: 31, kind: 'save' },
-      { id: 'drjamshid', order: 32, kind: 'action', once: true, deadPool: true },
-      { id: 'guny', order: 33, kind: 'action', once: true },
-      { id: 'leo', order: 34, kind: 'action', once: true },
+      { id: 'angel', order: 31, kind: 'action', deadPool: true, maxUses: 1 },
+      { id: 'drjamshid', order: 32, kind: 'action', maxUses: 1, deadPool: true },
+      { id: 'guny', order: 33, kind: 'action', maxUses: 1 },
+      { id: 'leo', order: 34, kind: 'kill', maxUses: 1, targetScope: 'opposing' },
       { id: 'kad', order: 35, kind: 'action' },
-      { id: 'terrorist', order: 36, kind: 'action', once: true },
-      { id: 'takavar', order: 37, kind: 'action' },
+      { id: 'terrorist', order: 36, kind: 'action', maxUses: 1 },
+      { id: 'takavar', order: 37, kind: 'kill', requiresMafiaTargetTonight: true },
       { id: 'bellman', order: 38, kind: 'action' },
     ];
 
+    /* تعداد بازیکنان زندهٔ دارای یک نقش مشخص */
+    function roleAliveCount(rid) {
+      let n = 0;
+      S.assigned.forEach((p, i) => { if (!S.eliminated[i] && p.roleId === rid) n++; });
+      return n;
+    }
     function computeNightSteps() {
       const list = [];
       NIGHT_TEMPLATE.forEach(t => {
         if (t.firstNightOnly && S.cycle.n !== 1) return;
         if (t.evenOnly && S.cycle.n % 2 !== 0) return;
-        if (t.once && S.nightUsedOnce[t.id]) return;
+        if (t.maxUses && (S.nightUseCount[t.id] || 0) >= t.maxUses) return;
         let present, roleForDisplay, subIds;
         if (t.virtual) {
-          subIds = t.roleIds.filter(rid => (S.cardCounts[rid] || 0) > 0);
+          subIds = t.roleIds.filter(rid => roleAliveCount(rid) > 0);
           present = subIds.length > 0;
           roleForDisplay = subIds[0];
         } else {
-          present = (S.cardCounts[t.id] || 0) > 0;
+          present = roleAliveCount(t.id) > 0;
           roleForDisplay = t.id; subIds = [t.id];
         }
         if (!present) return;
@@ -3831,6 +3858,45 @@
     function freshNight() {
       const steps = computeNightSteps();
       return { steps, idx: 0, done: new Array(steps.length).fill(false), choices: {}, resolved: false, result: null };
+    }
+
+    /* ── سیستم مسدودسازی/محافظت شبانه ──
+       وقتی نقشی با blocks:true کسی را هدف بگیرد، آن فرد تا پایان همان شب نمی‌تواند
+       از قدرتش استفاده کند (مثلاً گروگانگیر). وقتی نقشی با guards:true کسی را انتخاب کند،
+       آن فرد کاملاً از دسترس بقیهٔ نقش‌های همان شب (چه حمله چه بررسی) خارج می‌شود. */
+    const BLOCK_MESSAGES = {
+      hostage: { fa: 'گروگان گرفته شده است', en: 'has been taken hostage' },
+      psycho: { fa: 'خواب شده است', en: 'has been put to sleep' },
+      matador: { fa: 'توسط ماتادور از کار افتاده است', en: 'has been disabled by the Matador' },
+      boxer: { fa: 'توسط بوکسور بیهوش شده است', en: 'has been knocked out by the Boxer' },
+      wizard: { fa: 'توسط جادوگر مختل شده است', en: 'has been disrupted by the Wizard' },
+      lover: { fa: 'درگیر معشوقه شده است', en: 'is occupied with the Lover' },
+      mafialover: { fa: 'درگیر معشوقهٔ مافیا شده است', en: 'is occupied with the Mafia Lover' },
+    };
+    /* شاخص همهٔ بازیکنان زندهٔ صاحب این مرحله (برای مرحلهٔ گروهی مافیا ممکن است چند نفر باشند) */
+    function stepActorIndices(step) {
+      return S.assigned.map((p, i) => i).filter(i => !S.eliminated[i] && step.subIds.includes(S.assigned[i].roleId));
+    }
+    /* بر اساس اقدامات مراحلی که پیش از orderی مشخص انجام شده، چه کسانی مسدود/محافظت‌شده‌اند */
+    function computeNightBlockState(beforeOrder) {
+      const blockedBy = new Map(); const guarded = new Set();
+      S.night.steps.forEach(st => {
+        if (st.order >= beforeOrder) return;
+        const ch = S.night.choices[st.key];
+        if (!ch || ch.skipped || !ch.targets || !ch.targets.length) return;
+        if (st.blocks) ch.targets.forEach(ti => { if (!blockedBy.has(ti)) blockedBy.set(ti, st.id); });
+        if (st.guards) ch.targets.forEach(ti => guarded.add(ti));
+      });
+      return { blockedBy, guarded };
+    }
+    /* آیا این مرحله (با توجه به صاحب/صاحبانش) امشب مسدود است؟ برای مرحلهٔ گروهی مافیا،
+       فقط زمانی مسدود است که همهٔ رهبرهای زندهٔ آن مسدود شده باشند */
+    function stepBlockInfo(step, blockedBy) {
+      const actors = stepActorIndices(step);
+      if (!actors.length) return null;
+      const allBlocked = actors.every(i => blockedBy.has(i));
+      if (!allBlocked) return null;
+      return { sourceId: blockedBy.get(actors[0]) };
     }
 
     /* ── شمار زنده‌ها به تفکیک تیم ── */
@@ -3871,7 +3937,7 @@
     /* ── واگرد آخرین عملیات (UNDO) ── */
     function pushUndo(labelFa, labelEn) {
       try {
-        const snap = JSON.stringify({ eliminated: S.eliminated, scores: S.scores, cycle: S.cycle, night: S.night, nightUsedOnce: S.nightUsedOnce, gameLog: S.gameLog });
+        const snap = JSON.stringify({ eliminated: S.eliminated, scores: S.scores, cycle: S.cycle, night: S.night, nightUseCount: S.nightUseCount, lastSaveTarget: S.lastSaveTarget, pendingDeaths: S.pendingDeaths, gameLog: S.gameLog });
         S.undo.push({ labelFa, labelEn: labelEn || labelFa, snap });
         if (S.undo.length > 25) S.undo.shift();
       } catch (e) { }
@@ -3883,7 +3949,8 @@
       try {
         const d = JSON.parse(last.snap);
         S.eliminated = d.eliminated; S.scores = d.scores; S.cycle = d.cycle;
-        S.night = d.night; S.nightUsedOnce = d.nightUsedOnce; S.gameLog = d.gameLog;
+        S.night = d.night; S.nightUseCount = d.nightUseCount || {}; S.lastSaveTarget = d.lastSaveTarget || {};
+        S.pendingDeaths = d.pendingDeaths || []; S.gameLog = d.gameLog;
       } catch (e) { return; }
       renderGame();
       if (document.getElementById('s-night').classList.contains('active')) renderNightScreen();
@@ -3994,8 +4061,62 @@
       const desc = tr(role.desc, role.descEn) || tr('توضیحی ثبت نشده است', 'No description available');
       const name = step.virtual ? tr('مافیا (تیم)', 'Mafia (Team)') : (S.settings.lang === 'en' ? role.nameEn : role.name);
       const teamColor = TC[role.team] || 'var(--gold)';
-      const pool = (step.deadPool ? S.assigned.map((p, i) => ({ p, i })).filter(o => S.eliminated[o.i])
-        : S.assigned.map((p, i) => ({ p, i })).filter(o => !S.eliminated[o.i]));
+      const emojiHtml = role.img ? `<img src="${role.img}" style="width:32px;height:32px;object-fit:cover;border-radius:8px;">` : role.emoji;
+      const cardHead = `
+        <div class="night-card-head">
+          <div class="night-card-emoji">${emojiHtml}</div>
+          <div><div class="night-card-name">${name}</div><div class="night-card-team" style="color:${teamColor}">${teamName(role.team)}</div></div>
+        </div>`;
+
+      /* ── آیا صاحب این نقش امشب مسدود شده؟ (گروگان/خواب/بیهوش/مختل/درگیر معشوقه) ── */
+      const { blockedBy, guarded } = computeNightBlockState(step.order);
+      const blockInfo = stepBlockInfo(step, blockedBy);
+      if (blockInfo) {
+        S.night.choices[step.key] = { targets: [], skipped: true, blockedBy: blockInfo.sourceId };
+        const msg = BLOCK_MESSAGES[blockInfo.sourceId] || { fa: 'قدرتش امشب مسدود شده است', en: "their power is blocked tonight" };
+        document.getElementById('nightBody').innerHTML = `
+        <div class="night-card">
+          ${cardHead}
+          <div class="night-card-desc">${desc}</div>
+          <div class="night-card-blocked">🔒 ${tr(`${name} ${msg.fa} و امشب نمی‌تواند عمل کند.`, `${name} ${msg.en} and cannot act tonight.`)}</div>
+        </div>`;
+        return;
+      }
+
+      /* ── تکاور: فقط اگر امشب هدف مافیا بوده باشد می‌تواند شلیک کند ── */
+      if (step.requiresMafiaTargetTonight) {
+        const mafiaTeamStep = S.night.steps.find(s => s.id === 'mafiaTeam');
+        const mafiaChoice = mafiaTeamStep ? S.night.choices[mafiaTeamStep.key] : null;
+        const actors = stepActorIndices(step);
+        const wasTargeted = mafiaChoice && !mafiaChoice.skipped && mafiaChoice.targets && actors.some(i => mafiaChoice.targets.includes(i));
+        if (!wasTargeted) {
+          S.night.choices[step.key] = { targets: [], skipped: true };
+          document.getElementById('nightBody').innerHTML = `
+          <div class="night-card">
+            ${cardHead}
+            <div class="night-card-desc">${desc}</div>
+            <div class="night-card-blocked">😴 ${tr('امشب مورد حملهٔ مافیا قرار نگرفته و نمی‌تواند شلیک کند.', 'Was not targeted by the mafia tonight and cannot shoot.')}</div>
+          </div>`;
+          return;
+        }
+      }
+
+      const alivePool = S.assigned.map((p, i) => ({ p, i })).filter(o => !S.eliminated[o.i]);
+      const pool = step.deadPool
+        ? S.assigned.map((p, i) => ({ p, i })).filter(o => S.eliminated[o.i])
+        : alivePool.filter(o => {
+          if (guarded.has(o.i)) return false;
+          if (step.excludeSelf) { const selfIdx = S.assigned.findIndex(pp => pp.roleId === step.roleForDisplay); if (o.i === selfIdx) return false; }
+          if (step.noRepeatTarget && S.lastSaveTarget && S.lastSaveTarget[step.id] === o.i) return false;
+          if (step.targetScope) {
+            const tTeam = getRoleData(o.p.roleId).team;
+            if (step.targetScope === 'opposing' && tTeam === role.team) return false;
+            if (step.targetScope === 'same' && tTeam !== role.team) return false;
+            if (step.targetScope === 'mafia' && tTeam !== 'mafia') return false;
+          }
+          return true;
+        });
+
       const ch = S.night.choices[step.key] || { targets: [] };
       const targets = ch.targets || [];
       let targetHtml;
@@ -4015,16 +4136,12 @@
         }
       }
       let flags = '';
-      if (step.once) flags += `<span class="night-flag">⚡ ${tr('یک‌بار در کل بازی', 'Once per game')}</span> `;
+      if (step.maxUses) flags += `<span class="night-flag">⚡ ${tr(step.maxUses === 1 ? 'یک‌بار در کل بازی' : `حداکثر ${step.maxUses} بار در کل بازی`, step.maxUses === 1 ? 'Once per game' : `Up to ${step.maxUses}× per game`)}</span> `;
       if (step.evenOnly) flags += `<span class="night-flag">🔁 ${tr('فقط شب‌های زوج', 'Even nights only')}</span> `;
       if (step.firstNightOnly) flags += `<span class="night-flag">1️⃣ ${tr('فقط شب اول', 'First night only')}</span>`;
-      const emojiHtml = role.img ? `<img src="${role.img}" style="width:32px;height:32px;object-fit:cover;border-radius:8px;">` : role.emoji;
       document.getElementById('nightBody').innerHTML = `
       <div class="night-card">
-        <div class="night-card-head">
-          <div class="night-card-emoji">${emojiHtml}</div>
-          <div><div class="night-card-name">${name}</div><div class="night-card-team" style="color:${teamColor}">${teamName(role.team)}</div></div>
-        </div>
+        ${cardHead}
         ${flags ? `<div>${flags}</div>` : ''}
         <div class="night-card-desc">${desc}</div>
         <div class="night-card-prompt">${(NIGHT_PROMPTS[step.kind] || NIGHT_PROMPTS.action)()}</div>
@@ -4069,6 +4186,11 @@
       const ch = S.night.choices[step.key] || { targets: [], skipped: true };
       const role = getRoleData(step.roleForDisplay);
       const rname = step.virtual ? tr('مافیا', 'Mafia') : tr(role.name, role.nameEn);
+      if (ch.blockedBy) {
+        const msg = BLOCK_MESSAGES[ch.blockedBy] || { fa: 'قدرتش مسدود شده بود', en: 'their power was blocked' };
+        addLog(`🔒 ${rname}: ${tr(msg.fa, msg.en)}`);
+        return;
+      }
       if (ch.skipped || !ch.targets || !ch.targets.length) { addLog(`⏭ ${rname}: ${tr('کاری انجام نداد', 'took no action')}`); return; }
       const names = ch.targets.map(i => S.assigned[i].name).join(tr('، ', ', '));
       if (step.kind === 'inquiry') {
@@ -4095,7 +4217,9 @@
       sndSelect(); pushUndo(tr('ثبت اقدام شب', 'Record night action'));
       const step = S.night.steps[S.night.idx];
       if (!S.night.choices[step.key]) S.night.choices[step.key] = { targets: [], skipped: true };
-      if (step.once && S.night.choices[step.key].targets && S.night.choices[step.key].targets.length) S.nightUsedOnce[step.id] = true;
+      if (step.maxUses && S.night.choices[step.key].targets && S.night.choices[step.key].targets.length) {
+        S.nightUseCount[step.id] = (S.nightUseCount[step.id] || 0) + 1;
+      }
       logNightStepAction(step); nightAdvanceStep();
     }
     function nightAdvanceStep() {
@@ -4107,11 +4231,56 @@
     /* ── محاسبهٔ نتیجهٔ شب ── */
     function finishNight() {
       const killTargets = []; const saveSet = new Set();
+      S.lastSaveTarget = S.lastSaveTarget || {};
+      S.pendingDeaths = S.pendingDeaths || [];
+
+      /* حل مرگ‌های به‌تأخیرافتاده از شب‌های قبل (سم‌پاش، همشهری کین) */
+      const duePending = S.pendingDeaths.filter(pd => pd.night < S.cycle.n);
+      S.pendingDeaths = S.pendingDeaths.filter(pd => pd.night >= S.cycle.n);
+      duePending.forEach(pd => { if (!S.eliminated[pd.idx]) killTargets.push(pd.idx); });
+
       S.night.steps.forEach(step => {
         const ch = S.night.choices[step.key];
         if (!ch || ch.skipped || !ch.targets || !ch.targets.length) return;
+
+        if (step.id === 'fox') {
+          /* روباه: اگر بین سه نفر بررسی‌شده مافیا نباشد، خودش می‌میرد */
+          const anyMafia = ch.targets.some(ti => getRoleData(S.assigned[ti].roleId).team === 'mafia');
+          if (!anyMafia) { const foxIdx = S.assigned.findIndex(p => p.roleId === 'fox'); if (foxIdx > -1) killTargets.push(foxIdx); }
+          return;
+        }
+        if (step.id === 'leo' || step.id === 'takavar') {
+          /* لئون/تکاور: تیرشان روی پدرخوانده اثر ندارد */
+          const ti = ch.targets[0];
+          if (S.assigned[ti].roleId !== 'godfather') killTargets.push(ti);
+          return;
+        }
+        if (step.id === 'drjamshid' || step.id === 'angel') {
+          /* دکتر جمشید/فرشتهٔ نجات: یک مرده را زنده می‌کند */
+          const ti = ch.targets[0];
+          if (S.eliminated[ti]) S.eliminated[ti] = false;
+          return;
+        }
+        if (step.id === 'poisoner') {
+          /* سم‌پاش: هدف دور بعد می‌میرد، نه همین شب */
+          S.pendingDeaths.push({ idx: ch.targets[0], night: S.cycle.n, source: 'poison' });
+          return;
+        }
+        if (step.id === 'coinkeen') {
+          /* همشهری کین: اگر هدف مافیا باشد، خودش شب بعد می‌میرد */
+          const ti = ch.targets[0]; const tRole = getRoleData(S.assigned[ti].roleId);
+          if (tRole.team === 'mafia') {
+            const selfIdx = S.assigned.findIndex(p => p.roleId === 'coinkeen');
+            if (selfIdx > -1) S.pendingDeaths.push({ idx: selfIdx, night: S.cycle.n, source: 'coinkeen' });
+          }
+          return;
+        }
+
         if (step.kind === 'kill') { ch.targets.forEach(ti => killTargets.push(ti)); }
-        else if (step.kind === 'save') { ch.targets.forEach(ti => saveSet.add(ti)); }
+        else if (step.kind === 'save') {
+          ch.targets.forEach(ti => saveSet.add(ti));
+          if (step.noRepeatTarget) S.lastSaveTarget[step.id] = ch.targets[0];
+        }
         else if (step.kind === 'sniper') {
           const ti = ch.targets[0]; const role = getRoleData(S.assigned[ti].roleId);
           if (role.team === 'mafia') killTargets.push(ti);
@@ -4133,7 +4302,8 @@
       try {
         localStorage.setItem('mfGameState', JSON.stringify({
           assigned: S.assigned, revealed: S.revealed, eliminated: S.eliminated, scores: S.scores,
-          cardCounts: S.cardCounts, cycle: S.cycle, night: S.night, nightUsedOnce: S.nightUsedOnce,
+          cardCounts: S.cardCounts, cycle: S.cycle, night: S.night, nightUseCount: S.nightUseCount,
+          lastSaveTarget: S.lastSaveTarget, pendingDeaths: S.pendingDeaths,
           gameLog: S.gameLog, gameStarted: S.gameStarted
         }));
       } catch (e) { }
@@ -4149,7 +4319,9 @@
         S.cardCounts = p.cardCounts || S.cardCounts;
         S.cycle = p.cycle || { phase: 'night', n: 1 };
         S.night = p.night || freshNight();
-        S.nightUsedOnce = p.nightUsedOnce || {};
+        S.nightUseCount = p.nightUseCount || {};
+        S.lastSaveTarget = p.lastSaveTarget || {};
+        S.pendingDeaths = p.pendingDeaths || [];
         S.gameLog = p.gameLog || [];
         S.gameStarted = true;
         return true;
